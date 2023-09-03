@@ -5,5 +5,7 @@ services:
     image: postgres
     environment:
       POSTGRES_PASSWORD: eahfdaflehaehalfehaaxdcqehveya
+      POSTGRES_DB: aiplotpostgres
+      POSTGRES_USER: aiplotpostgresuser      # ユーザ名を追加
     ports:
       - "15432:5432"

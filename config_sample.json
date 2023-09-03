@@ -1,5 +1,13 @@
 {
-    "client_id": "YOUR_CLIENT_ID_HERE",
-    "client_secret": "YOUR_CLIENT_SECRET_HERE",
-    "redirect_url": "http://localhost:8080/auth/google/callback"
+    "postgres": {
+        "host": "localhost",
+        "port": "15432",
+        "user": "myuser",
+        "dbname": "mydb"
+    },
+    "google": {
+        "client_id": "YOUR_CLIENT_ID_HERE",
+        "client_secret": "YOUR_CLIENT_SECRET_HERE",
+        "redirect_url": "http://localhost:8080/auth/google/callback"
+    }
 }

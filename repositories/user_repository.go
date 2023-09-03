@@ -1,5 +1,4 @@
-// repository.go
-package main
+package repositories
 
 import (
 	"github.com/dfaw20/backend-ai-plot/models"
