@@ -18,9 +18,9 @@ func RunServer() {
 
 	// OAuth2設定を構築
 	oauth2Config = oauth2.Config{
-		ClientID:     config.GoogleClientID,
-		ClientSecret: config.GoogleClientSecret,
-		RedirectURL:  config.GoogleRedirectURL,
+		ClientID:     config.Google.ClientID,
+		ClientSecret: config.Google.ClientSecret,
+		RedirectURL:  config.Google.RedirectURL,
 		Scopes:       []string{"openid", "profile", "email"},
 		Endpoint:     google.Endpoint,
 	}

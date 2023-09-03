@@ -5,19 +5,28 @@ import (
 	"os"
 )
 
+type PostgresConfig struct {
+	Host     string `json:"host"`
+	Port     string `json:"port"`
+	User     string `json:"user"`
+	Dbname   string `json:"dbname"`
+	Password string `json:"password"`
+}
+
+type GoogleConfig struct {
+	ClientID     string `json:"client_id"`
+	ClientSecret string `json:"client_secret"`
+	RedirectURL  string `json:"redirect_url"`
+}
+
 type Config struct {
-	PostgresHost       string `json:"postgres.host"`
-	PostgresPort       string `json:"postgres.port"`
-	PostgresUser       string `json:"postgres.user"`
-	PostgresDbname     string `json:"postgres.dbname"`
-	GoogleClientID     string `json:"google.client_id"`
-	GoogleClientSecret string `json:"google.client_secret"`
-	GoogleRedirectURL  string `json:"google.redirect_url"`
+	Postgres PostgresConfig `json:"postgres"`
+	Google   GoogleConfig   `json:"google"`
 }
 
 func LoadConfig() Config {
 	// 設定ファイルから設定情報を読み込む
-	configData, err := os.ReadFile("config.json")
+	configData, err := os.ReadFile("./config.json")
 	if err != nil {
 		panic(err)
 	}
