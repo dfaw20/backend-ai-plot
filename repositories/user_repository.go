@@ -2,7 +2,6 @@ package repositories
 
 import (
 	"errors"
-	"log"
 
 	"github.com/dfaw20/backend-ai-plot/models"
 	"github.com/jinzhu/gorm"
@@ -33,16 +32,12 @@ func (r *UserRepository) CreateOrSyncUser(userInfo v2.Userinfo) (models.User, er
 		return models.User{}, result.Error
 	}
 
-	log.Print(user, "user")
-
 	if user.ID == 0 {
 		// ユーザが存在しない場合、新しいユーザを作成
 		newUser := models.User{
 			Email:       userInfo.Email,
 			DisplayName: userInfo.Name,
 		}
-
-		log.Print(newUser, "new_user")
 
 		r.db.Create(&newUser)
 

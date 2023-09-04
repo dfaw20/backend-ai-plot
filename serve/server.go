@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/dfaw20/backend-ai-plot/configuration"
+	"github.com/dfaw20/backend-ai-plot/models"
 	"github.com/gin-gonic/gin"
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/google"
@@ -82,5 +83,33 @@ func RunServer(db *gorm.DB) {
 		c.JSON(http.StatusOK, gin.H{"token": token, "user": user})
 	})
 
+	r.GET("/check-login", func(c *gin.Context) {
+		accessToken := c.Query("access_token")
+
+		if isValidAccessToken(accessToken) {
+			user := getUserInfo(accessToken)
+			c.JSON(http.StatusOK, gin.H{
+				"user": user,
+			})
+		} else {
+			c.JSON(http.StatusUnauthorized, gin.H{
+				"error": "Unauthorized",
+			})
+		}
+	})
+
 	r.Run(":8080")
+}
+
+func isValidAccessToken(accessToken string) bool {
+	// ここでアクセストークンの検証を実行するロジックを実装
+	// GoogleのOAuth2.0プロバイダの仕様に従って検証を行う
+	// 有効なトークンであればtrueを返す
+	// 無効なトークンであればfalseを返す
+	// 実際の検証方法はプロバイダに依存する
+	return true
+}
+
+func getUserInfo(accessToken string) models.User {
+	return models.User{}
 }
