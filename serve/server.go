@@ -1,19 +1,27 @@
 package serve
 
 import (
+	"context"
 	"net/http"
 
 	"github.com/dfaw20/backend-ai-plot/configuration"
 	"github.com/gin-gonic/gin"
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/google"
+
+	"github.com/jinzhu/gorm"
+
+	v2 "google.golang.org/api/oauth2/v2"
+	"google.golang.org/api/option"
+
+	"github.com/dfaw20/backend-ai-plot/repositories"
 )
 
 var (
 	oauth2Config oauth2.Config
 )
 
-func RunServer() {
+func RunServer(db *gorm.DB) {
 	config := configuration.LoadConfig()
 
 	// OAuth2設定を構築
@@ -48,8 +56,30 @@ func RunServer() {
 
 		// ユーザー情報の取得やデータベースへの保存などをここで行います。
 
+		// アクセストークンを使用してユーザ情報を取得
+		cxt := context.Background()
+		oauth2Service, err := v2.NewService(cxt, option.WithTokenSource(oauth2Config.TokenSource(cxt, token)))
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+
+		userInfo, err := oauth2Service.Userinfo.V2.Me.Get().Do()
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+
+		// ユーザ情報の作成or同期
+		userRepository := repositories.NewUserRepository(db)
+		user, err := userRepository.CreateOrSyncUser(*userInfo)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+
 		// ユーザー情報の表示
-		c.JSON(http.StatusOK, gin.H{"token": token})
+		c.JSON(http.StatusOK, gin.H{"token": token, "user": user})
 	})
 
 	r.Run(":8080")

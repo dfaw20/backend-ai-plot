@@ -1,8 +1,13 @@
 package repositories
 
 import (
+	"errors"
+	"log"
+
 	"github.com/dfaw20/backend-ai-plot/models"
 	"github.com/jinzhu/gorm"
+
+	v2 "google.golang.org/api/oauth2/v2"
 )
 
 type UserRepository struct {
@@ -13,18 +18,41 @@ func NewUserRepository(db *gorm.DB) *UserRepository {
 	return &UserRepository{db: db}
 }
 
-func (r *UserRepository) CreateUser(username, email, password string) (*models.User, error) {
-	user := &models.User{
-		Username: username,
-		Email:    email,
-		Password: password,
+func (r *UserRepository) CreateOrSyncUser(userInfo v2.Userinfo) (models.User, error) {
+
+	// バリデーション
+	if len(userInfo.Email) == 0 {
+		return models.User{}, errors.New("メールアドレスが取得できませんでした。")
 	}
 
-	if err := r.db.Create(user).Error; err != nil {
-		return nil, err
+	// データベースからユーザ情報を検索
+	var user models.User
+	result := r.db.Where("email = ?", userInfo.Email).First(&user)
+
+	if result.Error != nil {
+		return models.User{}, result.Error
 	}
 
-	return user, nil
+	log.Print(user, "user")
+
+	if user.ID == 0 {
+		// ユーザが存在しない場合、新しいユーザを作成
+		newUser := models.User{
+			Email:       userInfo.Email,
+			DisplayName: userInfo.Name,
+		}
+
+		log.Print(newUser, "new_user")
+
+		r.db.Create(&newUser)
+
+		return newUser, nil
+	} else {
+		// ユーザが存在する場合、ユーザ情報を更新
+		r.db.Model(&user).Updates(models.User{
+			DisplayName: userInfo.Name,
+		})
+
+		return user, nil
+	}
 }
-
-// 他のユーザーリポジトリ関連のメソッドを追加できます

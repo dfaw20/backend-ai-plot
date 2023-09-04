@@ -1,14 +1,12 @@
 package database
 
 import (
-	"log"
-
 	"github.com/dfaw20/backend-ai-plot/configuration"
 	"github.com/jinzhu/gorm"
 	_ "github.com/lib/pq"
 )
 
-func makeConnectInfo(config configuration.Config) string {
+func buildConnectInfo(config configuration.Config) string {
 	return " host=" + config.Postgres.Host +
 		" port=" + config.Postgres.Port +
 		" user=" + config.Postgres.User +
@@ -17,19 +15,18 @@ func makeConnectInfo(config configuration.Config) string {
 		" sslmode=disable"
 }
 
-func ConnectDB() *gorm.DB {
-	config := configuration.LoadConfig()
-	info := makeConnectInfo(config)
-
-	log.Print(info)
-	log.Print(config)
+func ConnectDB(config configuration.Config) *gorm.DB {
+	info := buildConnectInfo(config)
 
 	// データベースに接続するコード
 	db, err := gorm.Open("postgres", info)
 	if err != nil {
 		panic(err)
 	}
-	defer db.Close()
 
 	return db
+}
+
+func CloseDB(db *gorm.DB) {
+	db.Close()
 }
