@@ -24,6 +24,31 @@ var (
 	oauth2Config oauth2.Config
 )
 
+func AuthMiddleware(db *gorm.DB) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		// リクエストヘッダーからAuthorizationヘッダーを取得
+		authHeader := c.GetHeader("Authorization")
+		if authHeader == "" {
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
+			c.Abort()
+			return
+		}
+
+		// "Bearer " のプレフィックスを取り除いてアクセストークンを取得
+		accessToken := authHeader[len("Bearer "):]
+
+		isValid, user, _ := isValidAccessToken(db, accessToken)
+
+		if isValid {
+			c.Set("user", user)
+		} else {
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid access token"})
+			c.Abort()
+			return
+		}
+	}
+}
+
 func RunServer(db *gorm.DB,
 	googleConfig configuration.GoogleConfig,
 	frontendConfig configuration.FrontendConfig) {
@@ -97,62 +122,52 @@ func RunServer(db *gorm.DB,
 		c.JSON(http.StatusOK, gin.H{"token": token, "user": user})
 	})
 
-	r.GET("/check-login", func(c *gin.Context) {
-		accessToken := c.Query("access_token")
+	authorized := r.Group("/")
+	authorized.Use(AuthMiddleware(db))
 
-		if isValidAccessToken(accessToken) {
-			user, err := getUserInfo(db, accessToken)
-			if err != nil {
-				c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-				return
-			}
+	authorized.GET("/user_info", func(c *gin.Context) {
+		user, exists := c.Get("user")
 
+		if exists {
 			c.JSON(http.StatusOK, gin.H{
 				"user": user,
 			})
 		} else {
-			c.JSON(http.StatusUnauthorized, gin.H{
-				"error": "Unauthorized",
-			})
+			c.JSON(http.StatusNotFound, gin.H{"error": "User not found"})
+			return
 		}
 	})
 
 	r.Run(":8080")
 }
 
-func isValidAccessToken(accessToken string) bool {
-	// ここでアクセストークンの検証を実行するロジックを実装
-	// GoogleのOAuth2.0プロバイダの仕様に従って検証を行う
-	// 有効なトークンであればtrueを返す
-	// 無効なトークンであればfalseを返す
-	// 実際の検証方法はプロバイダに依存する
-	return true
-}
-
-func getUserInfo(db *gorm.DB, accessToken string) (models.User, error) {
-
+func isValidAccessToken(db *gorm.DB, accessToken string) (bool, models.User, error) {
 	userTokenRepository := repositories.NewUserTokenRepository(db)
 	token, err := userTokenRepository.FindByAccessToken(accessToken)
 	if err != nil {
-		return models.User{}, err
+		return false, models.User{}, err
 	}
 
 	cxt := context.Background()
 	oauth2Service, err := v2.NewService(cxt, option.WithTokenSource(oauth2Config.TokenSource(cxt, &token)))
 	if err != nil {
-		return models.User{}, err
+		return false, models.User{}, err
 	}
 
 	userInfo, err := oauth2Service.Userinfo.V2.Me.Get().Do()
 	if err != nil {
-		return models.User{}, err
+		return false, models.User{}, err
 	}
 
 	userRepository := repositories.NewUserRepository(db)
 	user, err := userRepository.FindByUserInfo(*userInfo)
 	if err != nil {
-		return models.User{}, err
+		return false, models.User{}, err
 	}
 
-	return user, nil
+	if user.ID == 0 {
+		return false, models.User{}, err
+	}
+
+	return true, user, nil
 }
