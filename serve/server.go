@@ -16,29 +16,39 @@ import (
 	"google.golang.org/api/option"
 
 	"github.com/dfaw20/backend-ai-plot/repositories"
+
+	"github.com/gin-contrib/cors"
 )
 
 var (
 	oauth2Config oauth2.Config
 )
 
-func RunServer(db *gorm.DB) {
-	config := configuration.LoadConfig()
-
+func RunServer(db *gorm.DB,
+	googleConfig configuration.GoogleConfig,
+	frontendConfig configuration.FrontendConfig) {
 	// OAuth2設定を構築
 	oauth2Config = oauth2.Config{
-		ClientID:     config.Google.ClientID,
-		ClientSecret: config.Google.ClientSecret,
-		RedirectURL:  config.Google.RedirectURL,
+		ClientID:     googleConfig.ClientID,
+		ClientSecret: googleConfig.ClientSecret,
+		RedirectURL:  googleConfig.RedirectURL,
 		Scopes:       []string{"openid", "profile", "email"},
 		Endpoint:     google.Endpoint,
 	}
 
 	r := gin.Default()
 
+	// CORS 対応
+	corsConfig := cors.DefaultConfig()
+	corsConfig.AllowOrigins = []string{
+		frontendConfig.Origin,
+	}
+	r.Use(cors.New(corsConfig))
+
 	r.GET("/auth/google", func(c *gin.Context) {
 		url := oauth2Config.AuthCodeURL("", oauth2.AccessTypeOffline)
-		c.Redirect(http.StatusFound, url)
+
+		c.JSON(http.StatusOK, gin.H{"oauth_url": url})
 	})
 
 	r.GET("/auth/google/callback", func(c *gin.Context) {

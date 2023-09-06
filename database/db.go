@@ -6,16 +6,16 @@ import (
 	_ "github.com/lib/pq"
 )
 
-func buildConnectInfo(config configuration.Config) string {
-	return " host=" + config.Postgres.Host +
-		" port=" + config.Postgres.Port +
-		" user=" + config.Postgres.User +
-		" dbname=" + config.Postgres.Dbname +
-		" password=" + config.Postgres.Password +
+func buildConnectInfo(config configuration.PostgresConfig) string {
+	return " host=" + config.Host +
+		" port=" + config.Port +
+		" user=" + config.User +
+		" dbname=" + config.Dbname +
+		" password=" + config.Password +
 		" sslmode=disable"
 }
 
-func ConnectDB(config configuration.Config) *gorm.DB {
+func ConnectDB(config configuration.PostgresConfig) *gorm.DB {
 	info := buildConnectInfo(config)
 
 	// データベースに接続するコード

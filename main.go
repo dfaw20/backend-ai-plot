@@ -9,8 +9,8 @@ import (
 
 func main() {
 	config := configuration.LoadConfig()
-	db := database.ConnectDB(config)
+	db := database.ConnectDB(config.Postgres)
 	defer database.CloseDB(db)
 	migrations.AutoMigrate(db, config)
-	serve.RunServer(db)
+	serve.RunServer(db, config.Google, config.Frontend)
 }

@@ -5,6 +5,11 @@ import (
 	"os"
 )
 
+type FrontendConfig struct {
+	BaseUrl string `json:"base_url"`
+	Origin  string `json:"origin"`
+}
+
 type PostgresConfig struct {
 	Host     string `json:"host"`
 	Port     string `json:"port"`
@@ -20,6 +25,7 @@ type GoogleConfig struct {
 }
 
 type Config struct {
+	Frontend FrontendConfig `json:"frontend"`
 	Postgres PostgresConfig `json:"postgres"`
 	Google   GoogleConfig   `json:"google"`
 }
