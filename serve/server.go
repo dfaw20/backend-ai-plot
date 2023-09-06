@@ -57,6 +57,10 @@ func RunServer(db *gorm.DB) {
 
 		// ユーザー情報の取得やデータベースへの保存などをここで行います。
 
+		// トークンをサーバに保管
+		userTokenRepository := repositories.NewUserTokenRepository(db)
+		userTokenRepository.StoreToken(*token)
+
 		// アクセストークンを使用してユーザ情報を取得
 		cxt := context.Background()
 		oauth2Service, err := v2.NewService(cxt, option.WithTokenSource(oauth2Config.TokenSource(cxt, token)))
@@ -87,7 +91,12 @@ func RunServer(db *gorm.DB) {
 		accessToken := c.Query("access_token")
 
 		if isValidAccessToken(accessToken) {
-			user := getUserInfo(accessToken)
+			user, err := getUserInfo(db, accessToken)
+			if err != nil {
+				c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+				return
+			}
+
 			c.JSON(http.StatusOK, gin.H{
 				"user": user,
 			})
@@ -110,6 +119,30 @@ func isValidAccessToken(accessToken string) bool {
 	return true
 }
 
-func getUserInfo(accessToken string) models.User {
-	return models.User{}
+func getUserInfo(db *gorm.DB, accessToken string) (models.User, error) {
+
+	userTokenRepository := repositories.NewUserTokenRepository(db)
+	token, err := userTokenRepository.FindByAccessToken(accessToken)
+	if err != nil {
+		return models.User{}, err
+	}
+
+	cxt := context.Background()
+	oauth2Service, err := v2.NewService(cxt, option.WithTokenSource(oauth2Config.TokenSource(cxt, &token)))
+	if err != nil {
+		return models.User{}, err
+	}
+
+	userInfo, err := oauth2Service.Userinfo.V2.Me.Get().Do()
+	if err != nil {
+		return models.User{}, err
+	}
+
+	userRepository := repositories.NewUserRepository(db)
+	user, err := userRepository.FindByUserInfo(*userInfo)
+	if err != nil {
+		return models.User{}, err
+	}
+
+	return user, nil
 }

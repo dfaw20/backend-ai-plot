@@ -51,3 +51,18 @@ func (r *UserRepository) CreateOrSyncUser(userInfo v2.Userinfo) (models.User, er
 		return user, nil
 	}
 }
+
+func (r *UserRepository) FindByUserInfo(userInfo v2.Userinfo) (models.User, error) {
+	var user models.User
+	result := r.db.Where("email = ?", userInfo.Email).First(&user)
+
+	if result.Error != nil {
+		return models.User{}, result.Error
+	}
+
+	if user.ID == 0 {
+		return models.User{}, errors.New("ユーザが見つかりません")
+	}
+
+	return user, nil
+}

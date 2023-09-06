@@ -8,4 +8,5 @@ import (
 
 func AutoMigrate(db *gorm.DB, config configuration.Config) {
 	db.AutoMigrate(&models.User{})
+	db.AutoMigrate(&models.UserToken{})
 }
