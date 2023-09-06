@@ -9,8 +9,8 @@ import (
 type UserToken struct {
 	gorm.Model
 
-	AccessToken  string    `gorm:"unique;not null"`
-	TokenType    string    `gorm:"not null"`
-	RefreshToken string    `gorm:"unique;not null"`
-	Expiry       time.Time `gorm:"not null"`
+	AccessToken  string    `gorm:"unique;not null" json:"access_token"`
+	TokenType    string    `gorm:"not null" json:"token_type"`
+	RefreshToken string    `gorm:"unique;not null" json:"refresh_token"`
+	Expiry       time.Time `gorm:"not null" json:"expiry"`
 }
