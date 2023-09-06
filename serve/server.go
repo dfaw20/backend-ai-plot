@@ -68,6 +68,13 @@ func RunServer(db *gorm.DB,
 	corsConfig.AllowOrigins = []string{
 		frontendConfig.Origin,
 	}
+	corsConfig.AllowMethods = []string{
+		"POST", "GET", "OPTIONS",
+	}
+	corsConfig.AllowHeaders = []string{
+		"Authorization",
+		"Content-Type",
+	}
 	r.Use(cors.New(corsConfig))
 
 	r.GET("/auth/google", func(c *gin.Context) {
