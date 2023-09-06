@@ -1,0 +1,18 @@
+{
+    "frontend": {
+        "base_url": "http://localhost:3000",
+        "origin": "http://localhost:3000"
+    },
+    "postgres": {
+        "host": "localhost",
+        "port": "15432",
+        "user": "myuser",
+        "dbname": "mydb",
+        "password": ""
+    },
+    "google": {
+        "client_id": "YOUR_CLIENT_ID_HERE",
+        "client_secret": "YOUR_CLIENT_SECRET_HERE",
+        "redirect_url": "http://localhost:3000/auth/google/callback"
+    }
+}
