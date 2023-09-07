@@ -9,8 +9,8 @@ type CharacterRepository struct {
 	db *gorm.DB
 }
 
-func NewCharacterRepository(db *gorm.DB) *CharacterRepository {
-	return &CharacterRepository{db}
+func NewCharacterRepository(db *gorm.DB) CharacterRepository {
+	return CharacterRepository{db}
 }
 
 func (r *CharacterRepository) GetAllCharacters() ([]models.Character, error) {

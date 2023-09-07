@@ -10,11 +10,11 @@ import (
 )
 
 type CharacterHandler struct {
-	characterRepo *repositories.CharacterRepository
+	characterRepo repositories.CharacterRepository
 }
 
-func NewCharacterHandler(characterRepo *repositories.CharacterRepository) *CharacterHandler {
-	return &CharacterHandler{characterRepo}
+func NewCharacterHandler(characterRepo repositories.CharacterRepository) CharacterHandler {
+	return CharacterHandler{characterRepo}
 }
 
 func (h *CharacterHandler) GetCharacters(c *gin.Context) {

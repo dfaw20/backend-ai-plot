@@ -20,6 +20,8 @@ func initializeDIContainer(db *gorm.DB, oauth2Config2 oauth2.Config) dependency.
 	userRepository := repositories.NewUserRepository(db)
 	userTokenRepository := repositories.NewUserTokenRepository(db)
 	authHandler := handlers.NewAuthHandler(oauth2Config2, userRepository, userTokenRepository)
-	diContainer := dependency.NewDIContainer(authHandler)
+	characterRepository := repositories.NewCharacterRepository(db)
+	characterHandler := handlers.NewCharacterHandler(characterRepository)
+	diContainer := dependency.NewDIContainer(authHandler, characterHandler)
 	return diContainer
 }
