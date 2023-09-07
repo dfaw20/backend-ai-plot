@@ -15,7 +15,7 @@ type PlotEvent struct {
 	EventID uint `json:"event_id"`
 }
 
-type Supporting struct {
+type Support struct {
 	gorm.Model
 	PlotID      uint `json:"plot_id"`
 	CharacterID uint `json:"character_id"`
@@ -32,6 +32,6 @@ type Plot struct {
 	Genre        string  `json:"genre"`
 	OutputFormat string  `json:"output_format"`
 	ShowWarning  bool    `json:"show_warning"`
-	Supportings  []Event `gorm:"many2many:supportings;" json:"-"`
+	Supports     []Event `gorm:"many2many:supports;" json:"-"`
 	Events       []Event `gorm:"many2many:plot_events;" json:"-"`
 }
