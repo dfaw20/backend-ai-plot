@@ -7,6 +7,14 @@ import (
 )
 
 func AutoMigrate(db *gorm.DB, config configuration.Config) {
-	db.AutoMigrate(&models.User{})
-	db.AutoMigrate(&models.UserToken{})
+	db.AutoMigrate(
+		&models.User{},
+		&models.UserToken{},
+		&models.Character{},
+		&models.Event{},
+		&models.Plot{},
+		&models.PlotEvent{},
+		&models.Story{},
+		&models.StoryCharacter{},
+	)
 }

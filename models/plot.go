@@ -15,14 +15,23 @@ type PlotEvent struct {
 	EventID uint `json:"event_id"`
 }
 
+type Supporting struct {
+	gorm.Model
+	PlotID      uint `json:"plot_id"`
+	CharacterID uint `json:"character_id"`
+}
+
 type Plot struct {
 	gorm.Model
-	UserID      uint    `json:"user_id"`
-	Title       string  `json:"title"`
-	Description string  `json:"description"`
-	Prompt      string  `json:"prompt"`
-	Location    string  `json:"location"`
-	Season      string  `json:"season"`
-	ShowWarning bool    `json:"show_warning"`
-	Events      []Event `gorm:"many2many:plot_events;" json:"-"`
+	UserID       uint    `json:"user_id"`
+	Title        string  `json:"title"`
+	Description  string  `json:"description"`
+	Prompt       string  `json:"prompt"`
+	Location     string  `json:"location"`
+	Season       string  `json:"season"`
+	Genre        string  `json:"genre"`
+	OutputFormat string  `json:"output_format"`
+	ShowWarning  bool    `json:"show_warning"`
+	Supportings  []Event `gorm:"many2many:supportings;" json:"-"`
+	Events       []Event `gorm:"many2many:plot_events;" json:"-"`
 }

@@ -4,6 +4,14 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
+type Gender string
+
+const (
+	Male   = Gender("male")
+	Female = Gender("female")
+	Other  = Gender("Other")
+)
+
 type Character struct {
 	gorm.Model
 	UserID      uint   `json:"user_id"`

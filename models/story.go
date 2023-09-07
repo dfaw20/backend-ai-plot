@@ -4,10 +4,19 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
+type Role string
+
+const (
+	HERO    = Gender("i")
+	PARTNER = Gender("u")
+	SUPPORT = Gender("support")
+)
+
 type StoryCharacter struct {
 	gorm.Model
-	StoryID     uint `json:"story_id"`
-	CharacterID uint `json:"character_id"`
+	StoryID     uint   `json:"story_id"`
+	CharacterID uint   `json:"character_id"`
+	Role        string `json:"role"`
 }
 
 type Story struct {
