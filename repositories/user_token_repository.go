@@ -13,8 +13,8 @@ type UserTokenRepository struct {
 	db *gorm.DB
 }
 
-func NewUserTokenRepository(db *gorm.DB) *UserTokenRepository {
-	return &UserTokenRepository{db: db}
+func NewUserTokenRepository(db *gorm.DB) UserTokenRepository {
+	return UserTokenRepository{db: db}
 }
 
 func (r *UserTokenRepository) FindByAccessToken(accessToken string) (oauth2.Token, error) {
