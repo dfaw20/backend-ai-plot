@@ -2,11 +2,11 @@ package handlers
 
 import (
 	"net/http"
-	"strconv"
 
 	"github.com/dfaw20/backend-ai-plot/models"
 	"github.com/dfaw20/backend-ai-plot/repositories"
 	"github.com/dfaw20/backend-ai-plot/requests"
+	"github.com/dfaw20/backend-ai-plot/utils"
 	"github.com/gin-gonic/gin"
 )
 
@@ -18,18 +18,9 @@ func NewCharacterHandler(characterRepo repositories.CharacterRepository) Charact
 	return CharacterHandler{characterRepo}
 }
 
-func (h *CharacterHandler) GetCharacters(c *gin.Context) {
-	characters, err := h.characterRepo.GetAllCharacters()
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
-	c.JSON(http.StatusOK, characters)
-}
-
 func (h *CharacterHandler) GetCharacterByID(c *gin.Context) {
 	idStr := c.Param("id")
-	id, err := strconv.ParseUint(idStr, 10, 64)
+	id, err := utils.ParseUint(idStr)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid character ID"})
 		return
@@ -50,7 +41,7 @@ func (h *CharacterHandler) CreateCharacter(c *gin.Context) {
 		return
 	}
 
-	user := c.Value("user").(models.User)
+	user := c.Value("auth_user").(models.User)
 
 	gender, err := models.ChoiceGender(input.Gender)
 	if err != nil {

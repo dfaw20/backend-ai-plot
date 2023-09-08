@@ -54,10 +54,10 @@ func main() {
 
 	r.GET("/auth/google", di.AuthHandler.GetOAuthURL)
 	r.GET("/auth/google/callback", di.AuthHandler.GetAuthGoogleCallback)
-	authorized.GET("/user_info", di.UserHandler.GetUserInfo)
-	authorized.POST("/user/edit", di.UserHandler.UpdateUser)
-	authorized.GET("/characters", di.CharacterHandler.GetCharacters)
-	authorized.GET("/characters/:id", di.CharacterHandler.GetCharacterByID)
+	authorized.GET("/auth_user", di.UserHandler.GetUserInfo)
+	authorized.POST("/auth_user/update", di.UserHandler.UpdateUser)
+	r.GET("/users/:user_id/characters", di.UserHandler.GetUserCharacters)
+	r.GET("/characters/:id", di.CharacterHandler.GetCharacterByID)
 	authorized.POST("/characters/create", di.CharacterHandler.CreateCharacter)
 
 	r.Run(":8080")

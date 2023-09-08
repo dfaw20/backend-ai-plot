@@ -32,7 +32,7 @@ func AuthMiddleware(db *gorm.DB, oauth2Config oauth2.Config) gin.HandlerFunc {
 		isValid, user, _ := isValidAccessToken(db, accessToken, oauth2Config)
 
 		if isValid {
-			c.Set("user", user)
+			c.Set("auth_user", user)
 		} else {
 			c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid access token"})
 			c.Abort()

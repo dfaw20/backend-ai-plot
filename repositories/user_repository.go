@@ -67,6 +67,21 @@ func (r *UserRepository) FindByUserInfo(userInfo v2.Userinfo) (models.User, erro
 	return user, nil
 }
 
+func (r *UserRepository) FindByUserID(userID uint) (models.User, error) {
+	var user models.User
+	result := r.db.Where("id = ?", userID).First(&user)
+
+	if result.Error != nil {
+		return models.User{}, result.Error
+	}
+
+	if user.ID == 0 {
+		return models.User{}, errors.New("ユーザが見つかりません")
+	}
+
+	return user, nil
+}
+
 func (r *UserRepository) UpdateUser(user *models.User) error {
 	if err := r.db.Update(user).Error; err != nil {
 		return err
