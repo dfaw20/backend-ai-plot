@@ -15,10 +15,6 @@ var (
 	oauth2Config oauth2.Config
 )
 
-func diWire() {
-
-}
-
 func main() {
 	config := configuration.LoadConfig()
 
