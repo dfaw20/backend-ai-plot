@@ -18,7 +18,7 @@ func NewUserHandler() UserHandler {
 	return UserHandler{}
 }
 
-func (h *AuthHandler) GetUserInfo(c *gin.Context) {
+func (h *UserHandler) GetUserInfo(c *gin.Context) {
 	user, exists := c.Get("user")
 
 	if exists {

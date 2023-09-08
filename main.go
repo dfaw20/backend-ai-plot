@@ -58,10 +58,10 @@ func main() {
 
 	r.GET("/auth/google", di.AuthHandler.GetOAuthURL)
 	r.GET("/auth/google/callback", di.AuthHandler.GetAuthGoogleCallback)
-	authorized.GET("/user_info", di.AuthHandler.GetUserInfo)
-	authorized.GET("/chracters", di.CharacterHandler.GetCharacters)
-	authorized.GET("/chracters/:id", di.CharacterHandler.GetCharacterByID)
-	authorized.POST("/chracters", di.CharacterHandler.CreateCharacter)
+	authorized.GET("/user_info", di.UserHandler.GetUserInfo)
+	authorized.GET("/characters", di.CharacterHandler.GetCharacters)
+	authorized.GET("/characters/:id", di.CharacterHandler.GetCharacterByID)
+	authorized.POST("/characters", di.CharacterHandler.CreateCharacter)
 
 	r.Run(":8080")
 }
