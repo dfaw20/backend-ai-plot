@@ -3,6 +3,7 @@ package handlers
 import (
 	"net/http"
 
+	"github.com/dfaw20/backend-ai-plot/models"
 	"github.com/dfaw20/backend-ai-plot/repositories"
 	"github.com/gin-gonic/gin"
 	"golang.org/x/oauth2"
@@ -19,14 +20,9 @@ func NewUserHandler() UserHandler {
 }
 
 func (h *UserHandler) GetUserInfo(c *gin.Context) {
-	user, exists := c.Get("user")
+	user := c.Value("user").(models.User)
 
-	if exists {
-		c.JSON(http.StatusOK, gin.H{
-			"user": user,
-		})
-	} else {
-		c.JSON(http.StatusNotFound, gin.H{"error": "User not found"})
-		return
-	}
+	c.JSON(http.StatusOK, gin.H{
+		"user": user,
+	})
 }

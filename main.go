@@ -57,7 +57,7 @@ func main() {
 	authorized.GET("/user_info", di.UserHandler.GetUserInfo)
 	authorized.GET("/characters", di.CharacterHandler.GetCharacters)
 	authorized.GET("/characters/:id", di.CharacterHandler.GetCharacterByID)
-	authorized.POST("/characters", di.CharacterHandler.CreateCharacter)
+	authorized.POST("/characters/create", di.CharacterHandler.CreateCharacter)
 
 	r.Run(":8080")
 }
