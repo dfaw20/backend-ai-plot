@@ -14,16 +14,16 @@ const (
 
 type StoryCharacter struct {
 	gorm.Model
-	StoryID     uint   `json:"story_id"`
-	CharacterID uint   `json:"character_id"`
-	Role        string `json:"role"`
+	StoryID     uint
+	CharacterID uint
+	Role        string
 }
 
 type Story struct {
 	gorm.Model
-	UserID     uint        `json:"user_id"`
-	EventID    uint        `json:"event_id"`
-	Prompt     string      `json:"prompt"`
-	Text       string      `json:"text"`
+	UserID     uint
+	EventID    uint
+	Prompt     string
+	Text       string
 	Characters []Character `gorm:"many2many:story_characters;" json:"-"`
 }
