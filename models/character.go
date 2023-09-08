@@ -1,6 +1,8 @@
 package models
 
 import (
+	"errors"
+
 	"github.com/jinzhu/gorm"
 )
 
@@ -9,8 +11,25 @@ type Gender string
 const (
 	Male   = Gender("male")
 	Female = Gender("female")
-	Other  = Gender("Other")
+	Other  = Gender("other")
 )
+
+func (g *Gender) toString() {
+	// 実装
+}
+
+func ChoiceGender(value string) (Gender, error) {
+	switch value {
+	case "male":
+		return Male, nil
+	case "female":
+		return Female, nil
+	case "other":
+		return Other, nil
+	default:
+		return "", errors.New("対応するGenderが見つかりません")
+	}
+}
 
 type Character struct {
 	gorm.Model

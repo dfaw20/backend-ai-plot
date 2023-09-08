@@ -6,6 +6,7 @@ import (
 
 	"github.com/dfaw20/backend-ai-plot/models"
 	"github.com/dfaw20/backend-ai-plot/repositories"
+	"github.com/dfaw20/backend-ai-plot/requests"
 	"github.com/gin-gonic/gin"
 )
 
@@ -43,10 +44,30 @@ func (h *CharacterHandler) GetCharacterByID(c *gin.Context) {
 }
 
 func (h *CharacterHandler) CreateCharacter(c *gin.Context) {
-	var character models.Character
-	if err := c.ShouldBindJSON(&character); err != nil {
+	var input requests.CharacterInput
+	if err := c.ShouldBindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
+	}
+
+	user := c.Value("user").(models.User)
+
+	gender, err := models.ChoiceGender(input.Gender)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	var character = models.Character{
+		UserID:      user.ID,
+		Name:        input.Name,
+		Nickname:    input.Nickname,
+		Gender:      string(gender),
+		Outfit:      input.Outfit,
+		Hairstyle:   input.Hairstyle,
+		Personality: input.Personality,
+		Tone:        input.Tone,
+		Profile:     input.Profile,
 	}
 
 	if err := h.characterRepo.CreateCharacter(&character); err != nil {

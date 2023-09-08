@@ -74,16 +74,3 @@ func (h *AuthHandler) GetAuthGoogleCallback(c *gin.Context) {
 	// ユーザー情報の表示
 	c.JSON(http.StatusOK, gin.H{"token": token, "user": user})
 }
-
-func (h *AuthHandler) GetUserInfo(c *gin.Context) {
-	user, exists := c.Get("user")
-
-	if exists {
-		c.JSON(http.StatusOK, gin.H{
-			"user": user,
-		})
-	} else {
-		c.JSON(http.StatusNotFound, gin.H{"error": "User not found"})
-		return
-	}
-}
