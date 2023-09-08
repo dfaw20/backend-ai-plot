@@ -55,6 +55,7 @@ func main() {
 	r.GET("/auth/google", di.AuthHandler.GetOAuthURL)
 	r.GET("/auth/google/callback", di.AuthHandler.GetAuthGoogleCallback)
 	authorized.GET("/user_info", di.UserHandler.GetUserInfo)
+	authorized.POST("/user/edit", di.UserHandler.UpdateUser)
 	authorized.GET("/characters", di.CharacterHandler.GetCharacters)
 	authorized.GET("/characters/:id", di.CharacterHandler.GetCharacterByID)
 	authorized.POST("/characters/create", di.CharacterHandler.CreateCharacter)

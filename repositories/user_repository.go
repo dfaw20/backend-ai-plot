@@ -66,3 +66,10 @@ func (r *UserRepository) FindByUserInfo(userInfo v2.Userinfo) (models.User, erro
 
 	return user, nil
 }
+
+func (r *UserRepository) UpdateUser(user *models.User) error {
+	if err := r.db.Update(user).Error; err != nil {
+		return err
+	}
+	return nil
+}
