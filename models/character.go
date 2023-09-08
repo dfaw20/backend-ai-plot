@@ -33,13 +33,13 @@ func ChoiceGender(value string) (Gender, error) {
 
 type Character struct {
 	gorm.Model
-	UserID      uint   `json:"user_id"`
-	Name        string `json:"name"`
-	Nickname    string `json:"nickname"`
-	Gender      string `json:"gender"`
-	Outfit      string `json:"outfit"`
-	Hairstyle   string `json:"hairstyle"`
-	Personality string `json:"personality"`
-	Tone        string `json:"tone"`
-	Profile     string `json:"profile"`
+	UserID      uint
+	Name        string
+	Nickname    string
+	Gender      string
+	Outfit      string
+	Hairstyle   string
+	Personality string
+	Tone        string
+	Profile     string
 }
