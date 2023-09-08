@@ -19,8 +19,18 @@ type UserHandler struct {
 	characterRepository repositories.CharacterRepository
 }
 
-func NewUserHandler() UserHandler {
-	return UserHandler{}
+func NewUserHandler(
+	oauth2Config oauth2.Config,
+	userRepository repositories.UserRepository,
+	userTokenRepository repositories.UserTokenRepository,
+	characterRepository repositories.CharacterRepository,
+) UserHandler {
+	return UserHandler{
+		oauth2Config,
+		userRepository,
+		userTokenRepository,
+		characterRepository,
+	}
 }
 
 func (h *UserHandler) GetUserInfo(c *gin.Context) {

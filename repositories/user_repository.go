@@ -2,6 +2,7 @@ package repositories
 
 import (
 	"errors"
+	"log"
 
 	"github.com/dfaw20/backend-ai-plot/models"
 	"github.com/jinzhu/gorm"
@@ -69,6 +70,7 @@ func (r *UserRepository) FindByUserInfo(userInfo v2.Userinfo) (models.User, erro
 
 func (r *UserRepository) FindByUserID(userID uint) (models.User, error) {
 	var user models.User
+	log.Print(userID, "userID")
 	result := r.db.Where("id = ?", userID).First(&user)
 
 	if result.Error != nil {
