@@ -6,8 +6,7 @@ import (
 )
 
 type FrontendConfig struct {
-	BaseUrl string `json:"base_url"`
-	Origin  string `json:"origin"`
+	Origins []string `json:"origins"`
 }
 
 type PostgresConfig struct {

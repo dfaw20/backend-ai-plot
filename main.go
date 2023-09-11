@@ -35,9 +35,7 @@ func main() {
 
 	// CORS 対応
 	corsConfig := cors.DefaultConfig()
-	corsConfig.AllowOrigins = []string{
-		config.Frontend.Origin,
-	}
+	corsConfig.AllowOrigins = config.Frontend.Origins
 	corsConfig.AllowMethods = []string{
 		"POST", "GET", "OPTIONS",
 	}
