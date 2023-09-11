@@ -7,7 +7,6 @@ import (
 	"github.com/dfaw20/backend-ai-plot/models"
 	"github.com/dfaw20/backend-ai-plot/repositories"
 	"github.com/dfaw20/backend-ai-plot/requests"
-	"github.com/dfaw20/backend-ai-plot/utils"
 	"github.com/gin-gonic/gin"
 	"golang.org/x/oauth2"
 )
@@ -62,26 +61,4 @@ func (h *UserHandler) UpdateUser(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusCreated, authUser)
-}
-
-func (h *UserHandler) GetUserCharacters(c *gin.Context) {
-	userIdStr := c.Param("user_id")
-	userId, err := utils.ParseUint(userIdStr)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
-
-	user, err := h.userRepository.FindByUserID(uint(userId))
-	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
-		return
-	}
-
-	characters, err := h.characterRepository.GetCharactersByUser(user)
-	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
-		return
-	}
-	c.JSON(http.StatusOK, characters)
 }
