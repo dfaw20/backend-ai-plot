@@ -7,6 +7,28 @@ import (
 )
 
 func AutoMigrate(db *gorm.DB, config configuration.Config) {
-	db.AutoMigrate(&models.User{})
-	db.AutoMigrate(&models.UserToken{})
+	db.Exec(`
+		DO $$ 
+		BEGIN 
+			IF EXISTS (SELECT constraint_name 
+						FROM information_schema.table_constraints 
+						WHERE table_name = 'user_tokens' 
+						AND constraint_type = 'UNIQUE' 
+						AND constraint_name = 'user_tokens_refresh_token_key') 
+			THEN 
+				ALTER TABLE user_tokens DROP CONSTRAINT user_tokens_refresh_token_key; 
+			END IF; 
+		END $$;
+	`)
+
+	db.AutoMigrate(
+		&models.User{},
+		&models.UserToken{},
+		&models.Character{},
+		&models.Event{},
+		&models.Plot{},
+		&models.PlotEvent{},
+		&models.Story{},
+		&models.StoryCharacter{},
+	)
 }

@@ -1,2 +1,4 @@
 config.json
 main
+docs
+*.DS_Store

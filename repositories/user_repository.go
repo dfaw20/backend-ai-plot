@@ -2,6 +2,7 @@ package repositories
 
 import (
 	"errors"
+	"log"
 
 	"github.com/dfaw20/backend-ai-plot/models"
 	"github.com/jinzhu/gorm"
@@ -13,8 +14,8 @@ type UserRepository struct {
 	db *gorm.DB
 }
 
-func NewUserRepository(db *gorm.DB) *UserRepository {
-	return &UserRepository{db: db}
+func NewUserRepository(db *gorm.DB) UserRepository {
+	return UserRepository{db: db}
 }
 
 func (r *UserRepository) CreateOrSyncUser(userInfo v2.Userinfo) (models.User, error) {
@@ -65,4 +66,27 @@ func (r *UserRepository) FindByUserInfo(userInfo v2.Userinfo) (models.User, erro
 	}
 
 	return user, nil
+}
+
+func (r *UserRepository) FindByUserID(userID uint) (models.User, error) {
+	var user models.User
+	log.Print(userID, "userID")
+	result := r.db.Where("id = ?", userID).First(&user)
+
+	if result.Error != nil {
+		return models.User{}, result.Error
+	}
+
+	if user.ID == 0 {
+		return models.User{}, errors.New("ユーザが見つかりません")
+	}
+
+	return user, nil
+}
+
+func (r *UserRepository) UpdateUser(user *models.User) error {
+	if err := r.db.Update(user).Error; err != nil {
+		return err
+	}
+	return nil
 }
