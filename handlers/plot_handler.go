@@ -61,3 +61,12 @@ func (h *PlotHandler) CreatePlot(c *gin.Context) {
 	}
 	c.JSON(http.StatusCreated, plot)
 }
+
+func (h *PlotHandler) GetPlotsRecently(c *gin.Context) {
+	plots, err := h.plotRepo.GetPlotsOrderByUpdatedAtDescLimit100()
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, plots)
+}

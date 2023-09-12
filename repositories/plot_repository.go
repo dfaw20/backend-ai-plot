@@ -3,6 +3,7 @@ package repositories
 import (
 	"github.com/dfaw20/backend-ai-plot/models"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 type PlotRepository struct {
@@ -34,4 +35,14 @@ func (r *PlotRepository) CreatePlot(plot *models.Plot) error {
 		return err
 	}
 	return nil
+}
+
+func (r *PlotRepository) GetPlotsOrderByUpdatedAtDescLimit100() ([]models.Plot, error) {
+	var plots []models.Plot
+	if err := r.db.
+		Order(clause.OrderByColumn{Column: clause.Column{Name: "updated_at"}, Desc: true}).
+		Find(&plots).Error; err != nil {
+		return nil, err
+	}
+	return plots, nil
 }
