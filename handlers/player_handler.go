@@ -9,16 +9,16 @@ import (
 )
 
 type PlayerHandler struct {
-	userRepository      repositories.UserRepository
+	playerRepository    repositories.PlayerRepository
 	characterRepository repositories.CharacterRepository
 }
 
 func NewPlayerHandler(
-	userRepository repositories.UserRepository,
+	playerRepository repositories.PlayerRepository,
 	characterRepository repositories.CharacterRepository,
 ) PlayerHandler {
 	return PlayerHandler{
-		userRepository,
+		playerRepository,
 		characterRepository,
 	}
 }
@@ -31,7 +31,7 @@ func (h *PlayerHandler) GetPlayer(c *gin.Context) {
 		return
 	}
 
-	player, err := h.userRepository.FindByUserID(uint(playerId))
+	player, err := h.playerRepository.FindByPlayerID(uint(playerId))
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
 		return
@@ -48,13 +48,13 @@ func (h *PlayerHandler) GetPlayerCharacters(c *gin.Context) {
 		return
 	}
 
-	player, err := h.userRepository.FindByUserID(uint(playerId))
+	player, err := h.playerRepository.FindByPlayerID(uint(playerId))
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
 		return
 	}
 
-	characters, err := h.characterRepository.GetCharactersByUser(player)
+	characters, err := h.characterRepository.GetCharactersByPlayer(player)
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
 		return

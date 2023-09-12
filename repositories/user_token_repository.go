@@ -4,7 +4,7 @@ import (
 	"errors"
 
 	"github.com/dfaw20/backend-ai-plot/models"
-	"github.com/jinzhu/gorm"
+	"gorm.io/gorm"
 
 	"golang.org/x/oauth2"
 )

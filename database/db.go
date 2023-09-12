@@ -2,11 +2,12 @@ package database
 
 import (
 	"github.com/dfaw20/backend-ai-plot/configuration"
-	"github.com/jinzhu/gorm"
-	_ "github.com/lib/pq"
+	//_ "github.com/lib/pq"
+	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
 )
 
-func buildConnectInfo(config configuration.PostgresConfig) string {
+func buildConnectDsn(config configuration.PostgresConfig) string {
 	return " host=" + config.Host +
 		" port=" + config.Port +
 		" user=" + config.User +
@@ -16,17 +17,13 @@ func buildConnectInfo(config configuration.PostgresConfig) string {
 }
 
 func ConnectDB(config configuration.PostgresConfig) *gorm.DB {
-	info := buildConnectInfo(config)
+	dsn := buildConnectDsn(config)
 
 	// データベースに接続するコード
-	db, err := gorm.Open("postgres", info)
+	db, err := gorm.Open(postgres.Open(dsn))
 	if err != nil {
 		panic(err)
 	}
 
 	return db
-}
-
-func CloseDB(db *gorm.DB) {
-	db.Close()
 }

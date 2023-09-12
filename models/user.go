@@ -2,7 +2,7 @@ package models
 
 import (
 	"github.com/dfaw20/backend-ai-plot/entities"
-	"github.com/jinzhu/gorm"
+	"gorm.io/gorm"
 )
 
 type User struct {

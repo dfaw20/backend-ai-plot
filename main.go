@@ -19,7 +19,6 @@ func main() {
 	config := configuration.LoadConfig()
 
 	db := database.ConnectDB(config.Postgres)
-	defer database.CloseDB(db)
 	migrations.AutoMigrate(db, config)
 
 	// OAuth2設定を構築

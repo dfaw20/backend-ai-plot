@@ -5,7 +5,7 @@ import (
 	"log"
 
 	"github.com/dfaw20/backend-ai-plot/models"
-	"github.com/jinzhu/gorm"
+	"gorm.io/gorm"
 
 	v2 "google.golang.org/api/oauth2/v2"
 )
@@ -85,7 +85,9 @@ func (r *UserRepository) FindByUserID(userID uint) (models.User, error) {
 }
 
 func (r *UserRepository) UpdateUser(user *models.User) error {
-	if err := r.db.Update(user).Error; err != nil {
+	r.db.Model(models.User{}).Where("id = ?", user.ID).Updates(user)
+
+	if err := r.db.Updates(user).Error; err != nil {
 		return err
 	}
 	return nil

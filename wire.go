@@ -7,8 +7,8 @@ import (
 	"github.com/dfaw20/backend-ai-plot/handlers"
 	"github.com/dfaw20/backend-ai-plot/repositories"
 	"github.com/google/wire"
-	"github.com/jinzhu/gorm"
 	"golang.org/x/oauth2"
+	"gorm.io/gorm"
 )
 
 func initializeDIContainer(db *gorm.DB, oauth2Config oauth2.Config) dependency.DIContainer {
@@ -19,6 +19,7 @@ func initializeDIContainer(db *gorm.DB, oauth2Config oauth2.Config) dependency.D
 		handlers.NewPlayerHandler,
 		handlers.NewCharacterHandler,
 		repositories.NewUserRepository,
+		repositories.NewPlayerRepository,
 		repositories.NewUserTokenRepository,
 		repositories.NewCharacterRepository,
 	)

@@ -1,7 +1,7 @@
 package models
 
 import (
-	"github.com/jinzhu/gorm"
+	"gorm.io/gorm"
 )
 
 type Role string
@@ -22,7 +22,7 @@ type StoryCharacter struct {
 type Story struct {
 	gorm.Model
 	UserID     uint
-	EventID    uint
+	PlotID     uint
 	Prompt     string
 	Text       string
 	Characters []Character `gorm:"many2many:story_characters;" json:"-"`
