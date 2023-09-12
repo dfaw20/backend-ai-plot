@@ -11,15 +11,13 @@ import (
 )
 
 type PlotHandler struct {
-	plotRepo   repositories.PlotRepository
-	playerRepo repositories.PlayerRepository
+	plotRepo repositories.PlotRepository
 }
 
 func NewPlotHandler(
 	plotRepo repositories.PlotRepository,
-	playerRepo repositories.PlayerRepository,
 ) PlotHandler {
-	return PlotHandler{plotRepo, playerRepo}
+	return PlotHandler{plotRepo}
 }
 
 func (h *PlotHandler) GetPlotByID(c *gin.Context) {
@@ -68,28 +66,6 @@ func (h *PlotHandler) CreatePlot(c *gin.Context) {
 
 func (h *PlotHandler) GetPlotsRecently(c *gin.Context) {
 	plots, err := h.plotRepo.GetPlotsOrderByUpdatedAtDescLimit100()
-	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
-		return
-	}
-	c.JSON(http.StatusOK, plots)
-}
-
-func (h *PlotHandler) GetPlotsByPlayer(c *gin.Context) {
-	playerIdStr := c.Param("player_id")
-	playerId, err := utils.ParseUint(playerIdStr)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
-
-	player, err := h.playerRepo.FindByPlayerID(uint(playerId))
-	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
-		return
-	}
-
-	plots, err := h.plotRepo.GetPlotsByPlayer(player)
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
 		return
