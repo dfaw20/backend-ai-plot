@@ -1,6 +1,7 @@
 package repositories
 
 import (
+	"github.com/dfaw20/backend-ai-plot/entities"
 	"github.com/dfaw20/backend-ai-plot/models"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
@@ -14,9 +15,9 @@ func NewPlotRepository(db *gorm.DB) PlotRepository {
 	return PlotRepository{db}
 }
 
-func (r *PlotRepository) GetPlotsByUser(user models.User) ([]models.Plot, error) {
+func (r *PlotRepository) GetPlotsByPlayer(player entities.Player) ([]models.Plot, error) {
 	var plots []models.Plot
-	if err := r.db.Where("user_id = ?", user.ID).Find(&plots).Error; err != nil {
+	if err := r.db.Where("user_id = ?", player.ID).Find(&plots).Error; err != nil {
 		return nil, err
 	}
 	return plots, nil
