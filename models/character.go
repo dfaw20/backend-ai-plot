@@ -38,7 +38,6 @@ type Character struct {
 	Nickname    string
 	Gender      string
 	Outfit      string
-	Hairstyle   string
 	Personality string
 	Tone        string
 	Profile     string
