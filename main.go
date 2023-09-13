@@ -57,13 +57,13 @@ func main() {
 
 	r.GET("/players/:player_id", di.PlayerHandler.GetPlayer)
 	r.GET("/players/:player_id/characters", di.PlayerHandler.GetPlayerCharacters)
-	r.GET("/players/:player_id/plots", di.PlayerHandler.GetPlayerCharacters)
+	r.GET("/players/:player_id/plots", di.PlayerHandler.GetPlayerPlots)
 
 	r.GET("/characters/:id", di.CharacterHandler.GetCharacterByID)
 	authorized.POST("/characters/create", di.CharacterHandler.CreateCharacter)
 
-	r.GET("/plot/:id", di.PlotHandler.GetPlotByID)
-	authorized.POST("/plot/create", di.PlotHandler.CreatePlot)
+	r.GET("/plots/:id", di.PlotHandler.GetPlotByID)
+	authorized.POST("/plots/create", di.PlotHandler.CreatePlot)
 	r.GET("/plots/recent", di.PlotHandler.GetPlotsRecently)
 
 	r.Run(":8080")
