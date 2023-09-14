@@ -40,8 +40,8 @@ func (h *UserHandler) GetUserInfo(c *gin.Context) {
 	})
 }
 
-func (h *UserHandler) UpdateUser(c *gin.Context) {
-	var input requests.UserEdit
+func (h *UserHandler) UpdateUserDisplayName(c *gin.Context) {
+	var input requests.UserDisplayNameEdit
 	if err := c.ShouldBindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -49,14 +49,13 @@ func (h *UserHandler) UpdateUser(c *gin.Context) {
 
 	authUser := c.Value("auth_user").(models.User)
 
-	if len(input.DisplayName) == 0 {
+	if len(input.GetTrimDisplayName()) == 0 {
 		c.JSON(http.StatusBadRequest, gin.H{"error": errors.New("表示名が未入力です")})
 		return
 	}
 
-	authUser.DisplayName = input.DisplayName
-
-	if err := h.userRepository.UpdateUser(&authUser); err != nil {
+	if err := h.userRepository.
+		UpdateUserDisplayName(authUser.ID, input.GetTrimDisplayName()); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}

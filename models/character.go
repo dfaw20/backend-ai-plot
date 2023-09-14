@@ -15,10 +15,6 @@ const (
 	Other  = Gender("other")
 )
 
-func (g *Gender) toString() {
-	// 実装
-}
-
 func ChoiceGender(value string) (Gender, error) {
 	switch value {
 	case "male":
@@ -42,6 +38,7 @@ type Character struct {
 	Personality string
 	Tone        string
 	Profile     string
+	Sensitive   bool
 }
 
 func (c *Character) getGenderText() string {

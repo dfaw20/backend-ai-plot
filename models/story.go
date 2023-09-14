@@ -25,5 +25,6 @@ type Story struct {
 	PlotID          uint
 	Prompt          string
 	Text            string
+	Sensitive       bool
 	StoryCharacters []StoryCharacter `gorm:"many2many:story_characters;" json:"-"`
 }

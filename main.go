@@ -53,7 +53,7 @@ func main() {
 	r.GET("/auth/google/callback", di.AuthHandler.GetAuthGoogleCallback)
 
 	authorized.GET("/user", di.UserHandler.GetUserInfo)
-	authorized.POST("/user/update", di.UserHandler.UpdateUser)
+	authorized.POST("/user/update", di.UserHandler.UpdateUserDisplayName)
 
 	r.GET("/players/:player_id", di.PlayerHandler.GetPlayer)
 	r.GET("/players/:player_id/characters", di.PlayerHandler.GetPlayerCharacters)

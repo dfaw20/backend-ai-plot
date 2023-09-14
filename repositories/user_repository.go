@@ -84,8 +84,10 @@ func (r *UserRepository) FindByUserID(userID uint) (models.User, error) {
 	return user, nil
 }
 
-func (r *UserRepository) UpdateUser(user *models.User) error {
-	if err := r.db.Model(models.User{}).Where("id = ?", user.ID).Updates(user).Error; err != nil {
+func (r *UserRepository) UpdateUserDisplayName(userID uint, displayName string) error {
+	if err := r.db.Model(models.User{}).
+		Where("id = ?", userID).
+		Update("display_name", displayName).Error; err != nil {
 		return err
 	}
 	return nil
