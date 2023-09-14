@@ -3,6 +3,7 @@ package handlers
 import (
 	"net/http"
 
+	"github.com/dfaw20/backend-ai-plot/entities"
 	"github.com/dfaw20/backend-ai-plot/models"
 	"github.com/dfaw20/backend-ai-plot/repositories"
 	"github.com/dfaw20/backend-ai-plot/requests"
@@ -47,9 +48,11 @@ func (h *TaleHandler) createTale(c *gin.Context) {
 		return
 	}
 
-	if err := h.plotRepo.CreatePlot(&plot); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
+	talePrompt := entities.NewTalePrompt(
+		*targetCharacter, *heroCharacter, *plot,
+	)
+
+	fullPrompt := talePrompt.BuildFullPrompt()
+
 	c.JSON(http.StatusCreated, plot)
 }

@@ -1,7 +1,6 @@
 package models
 
 import (
-	"fmt"
 	"strings"
 
 	"gorm.io/gorm"
@@ -40,7 +39,7 @@ func (plot *Plot) getOutputFormat() string {
 		return ""
 	}
 
-	return "※出力形式: " + plot.OutputFormat
+	return "※出力形式: " + strings.TrimSpace(plot.OutputFormat)
 }
 
 func (plot *Plot) getTitle() string {
@@ -48,15 +47,15 @@ func (plot *Plot) getTitle() string {
 		return ""
 	}
 
-	return "タイトル: " + plot.Title
+	return "タイトル: " + strings.TrimSpace(plot.Title)
 }
 
-func (plot *Plot) getGenre() string {
+func (plot *Plot) GetGenre() string {
 	if len(strings.TrimSpace(plot.Genre)) == 0 {
-		return "ジャンル: ラブコメ"
+		return "ラブコメ"
 	}
 
-	return "ジャンル: " + plot.Genre
+	return strings.TrimSpace(plot.Genre)
 }
 
 func (plot *Plot) getLocation() string {
@@ -64,7 +63,7 @@ func (plot *Plot) getLocation() string {
 		return ""
 	}
 
-	return "物語の舞台: " + plot.Location
+	return "物語の舞台: " + strings.TrimSpace(plot.Location)
 }
 
 func (plot *Plot) getSeason() string {
@@ -72,28 +71,39 @@ func (plot *Plot) getSeason() string {
 		return ""
 	}
 
-	return "季節: " + plot.Season
+	return "季節: " + strings.TrimSpace(plot.Season)
 }
 
 func (plot *Plot) BuildPrefixPrompt() string {
 
-	template := `
-		%s
-		%s
+	var lines []string
 
-		%s
-		%s
-		%s
-		%s
-	`
-	text := fmt.Sprintf(template,
-		plot.getWarning(),
-		plot.getOutputFormat(),
-		plot.getTitle(),
-		plot.getGenre(),
-		plot.getLocation(),
-		plot.getSeason(),
-	)
+	warning := plot.getWarning()
+	if len(warning) > 0 {
+		lines = append(lines, warning)
+	}
 
-	return text
+	outputFormat := plot.getOutputFormat()
+	if len(outputFormat) > 0 {
+		lines = append(lines, outputFormat)
+	}
+
+	lines = append(lines, "")
+
+	title := plot.getTitle()
+	if len(title) > 0 {
+		lines = append(lines, title)
+	}
+
+	location := plot.getLocation()
+	if len(location) > 0 {
+		lines = append(lines, location)
+	}
+
+	season := plot.getSeason()
+	if len(season) > 0 {
+		lines = append(lines, season)
+	}
+
+	return strings.Join(lines, "\n")
 }

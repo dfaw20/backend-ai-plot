@@ -60,6 +60,15 @@ func (c *Character) getGenderText() string {
 	return ""
 }
 
+func (c *Character) ShortNameAsPossible() string {
+	nickname := strings.TrimSpace(c.Nickname)
+	if len(nickname) > 0 {
+		return nickname
+	}
+
+	return strings.TrimSpace(c.Name)
+}
+
 func (c *Character) BuildPrompt() string {
 	var lines []string
 
