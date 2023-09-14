@@ -27,6 +27,7 @@ func initializeDIContainer(db *gorm.DB, oauth2Config2 oauth2.Config) dependency.
 	playerHandler := handlers.NewPlayerHandler(playerRepository, characterRepository, plotRepository)
 	characterHandler := handlers.NewCharacterHandler(characterRepository)
 	plotHandler := handlers.NewPlotHandler(plotRepository)
-	diContainer := dependency.NewDIContainer(authHandler, userHandler, playerHandler, characterHandler, plotHandler)
+	taleHandler := handlers.NewTaleHandler(plotRepository, characterRepository)
+	diContainer := dependency.NewDIContainer(authHandler, userHandler, playerHandler, characterHandler, plotHandler, taleHandler)
 	return diContainer
 }

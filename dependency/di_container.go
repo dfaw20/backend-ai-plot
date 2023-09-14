@@ -8,6 +8,7 @@ type DIContainer struct {
 	PlayerHandler    handlers.PlayerHandler
 	CharacterHandler handlers.CharacterHandler
 	PlotHandler      handlers.PlotHandler
+	TaleHandler      handlers.TaleHandler
 }
 
 func NewDIContainer(
@@ -16,6 +17,7 @@ func NewDIContainer(
 	playerHandler handlers.PlayerHandler,
 	CharacterHandler handlers.CharacterHandler,
 	plotHandler handlers.PlotHandler,
+	TaleHandler handlers.TaleHandler,
 ) DIContainer {
 	return DIContainer{
 		authHandler,
@@ -23,5 +25,6 @@ func NewDIContainer(
 		playerHandler,
 		CharacterHandler,
 		plotHandler,
+		TaleHandler,
 	}
 }

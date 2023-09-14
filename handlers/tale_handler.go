@@ -4,7 +4,6 @@ import (
 	"net/http"
 
 	"github.com/dfaw20/backend-ai-plot/entities"
-	"github.com/dfaw20/backend-ai-plot/models"
 	"github.com/dfaw20/backend-ai-plot/repositories"
 	"github.com/dfaw20/backend-ai-plot/requests"
 	"github.com/gin-gonic/gin"
@@ -22,14 +21,13 @@ func NewTaleHandler(
 	return TaleHandler{plotRepo, characterRepo}
 }
 
-func (h *TaleHandler) createTale(c *gin.Context) {
+func (h *TaleHandler) CreateTale(c *gin.Context) {
 	var input requests.TaleInput
 	if err := c.ShouldBindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	user := c.Value("auth_user").(models.User)
 	targetCharacter, err := h.characterRepo.GetCharacterByID(input.TargetCharacterID)
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "対象キャラクターが見つかりません"})
@@ -54,5 +52,5 @@ func (h *TaleHandler) createTale(c *gin.Context) {
 
 	fullPrompt := talePrompt.BuildFullPrompt()
 
-	c.JSON(http.StatusCreated, plot)
+	c.JSON(http.StatusCreated, fullPrompt)
 }

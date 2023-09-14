@@ -66,5 +66,7 @@ func main() {
 	authorized.POST("/plots/create", di.PlotHandler.CreatePlot)
 	r.GET("/plots/recent", di.PlotHandler.GetPlotsRecently)
 
+	authorized.POST("/tale/create", di.TaleHandler.CreateTale)
+
 	r.Run(":8080")
 }

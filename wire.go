@@ -19,6 +19,7 @@ func initializeDIContainer(db *gorm.DB, oauth2Config oauth2.Config) dependency.D
 		handlers.NewPlayerHandler,
 		handlers.NewCharacterHandler,
 		handlers.NewPlotHandler,
+		handlers.NewTaleHandler,
 		repositories.NewUserRepository,
 		repositories.NewPlayerRepository,
 		repositories.NewUserTokenRepository,
