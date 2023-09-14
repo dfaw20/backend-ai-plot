@@ -64,8 +64,8 @@ func (h *AuthHandler) GetAuthGoogleCallback(c *gin.Context) {
 		return
 	}
 
-	// ユーザ情報の作成or同期
-	user, err := h.userRepository.CreateOrSyncUser(*userInfo)
+	// ユーザ情報の作成
+	user, err := h.userRepository.CreateUserIfNotExist(*userInfo)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return

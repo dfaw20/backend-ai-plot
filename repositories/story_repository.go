@@ -14,7 +14,7 @@ func NewStoryRepository(db *gorm.DB) StoryRepository {
 	return StoryRepository{db}
 }
 
-func (r *StoryRepository) GetCharactersByPlayer(player entities.Player) ([]models.Story, error) {
+func (r *StoryRepository) GetStoriesByPlayer(player entities.Player) ([]models.Story, error) {
 	var stories []models.Story
 	if err := r.db.Where("user_id = ?", player.ID).Find(&stories).Error; err != nil {
 		return nil, err
@@ -22,7 +22,7 @@ func (r *StoryRepository) GetCharactersByPlayer(player entities.Player) ([]model
 	return stories, nil
 }
 
-func (r *StoryRepository) GetCharacterByID(id uint) (*models.Story, error) {
+func (r *StoryRepository) GetStoryByID(id uint) (*models.Story, error) {
 	var story models.Story
 	if err := r.db.First(&story, id).Error; err != nil {
 		return nil, err
@@ -30,7 +30,7 @@ func (r *StoryRepository) GetCharacterByID(id uint) (*models.Story, error) {
 	return &story, nil
 }
 
-func (r *StoryRepository) CreateCharacter(story *models.Story) error {
+func (r *StoryRepository) CreateStory(story *models.Story) error {
 	if err := r.db.Create(story).Error; err != nil {
 		return err
 	}

@@ -25,6 +25,23 @@ func NewTaleHandler(
 	return TaleHandler{plotRepo, characterRepo, storyRepo}
 }
 
+func hasSensitive(
+	target models.Character,
+	hero models.Character,
+	plot models.Plot,
+) bool {
+	if target.Sensitive {
+		return true
+	}
+	if hero.Sensitive {
+		return true
+	}
+	if plot.Sensitive {
+		return true
+	}
+	return false
+}
+
 func (h *TaleHandler) CreateTale(c *gin.Context) {
 	user := c.Value("auth_user").(models.User)
 
@@ -59,13 +76,15 @@ func (h *TaleHandler) CreateTale(c *gin.Context) {
 	fullPrompt := talePrompt.BuildFullPrompt()
 
 	story := models.Story{
-		UserID: user.ID,
-		PlotID: plot.ID,
-		Prompt: fullPrompt,
-		Text:   "",
+		UserID:    user.ID,
+		PlotID:    plot.ID,
+		Prompt:    fullPrompt,
+		Text:      "",
+		Sensitive: hasSensitive(*targetCharacter, *heroCharacter, *plot),
 	}
-	err = h.storyRepo.CreateCharacter(&story)
+	err = h.storyRepo.CreateStory(&story)
 	if err != nil {
+		log.Println(err)
 		c.JSON(http.StatusNotFound, gin.H{"error": "ストーリーの保存に失敗しました"})
 		return
 	}

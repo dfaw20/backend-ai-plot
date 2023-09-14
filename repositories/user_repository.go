@@ -17,7 +17,7 @@ func NewUserRepository(db *gorm.DB) UserRepository {
 	return UserRepository{db: db}
 }
 
-func (r *UserRepository) CreateOrSyncUser(userInfo v2.Userinfo) (models.User, error) {
+func (r *UserRepository) CreateUserIfNotExist(userInfo v2.Userinfo) (models.User, error) {
 
 	// バリデーション
 	if len(userInfo.Email) == 0 {
@@ -35,19 +35,15 @@ func (r *UserRepository) CreateOrSyncUser(userInfo v2.Userinfo) (models.User, er
 	if user.ID == 0 {
 		// ユーザが存在しない場合、新しいユーザを作成
 		newUser := models.User{
-			Email:       userInfo.Email,
-			DisplayName: userInfo.Name,
+			Email:           userInfo.Email,
+			DisplayName:     userInfo.Name,
+			SensitiveOption: uint(models.VIEW_WITH_CURTAIN),
 		}
 
 		r.db.Create(&newUser)
 
 		return newUser, nil
 	} else {
-		// ユーザが存在する場合、ユーザ情報を更新
-		r.db.Model(&user).Updates(models.User{
-			DisplayName: userInfo.Name,
-		})
-
 		return user, nil
 	}
 }
