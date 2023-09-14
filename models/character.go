@@ -34,6 +34,7 @@ type Character struct {
 	Name        string
 	Nickname    string
 	Gender      string
+	Hair        string
 	Outfit      string
 	Personality string
 	Tone        string
@@ -81,9 +82,14 @@ func (c *Character) BuildPrompt() string {
 		lines = append(lines, gender)
 	}
 
+	hair := strings.TrimSpace(c.Outfit)
+	if len(hair) > 0 {
+		lines = append(lines, "髪色: "+hair)
+	}
+
 	outfit := strings.TrimSpace(c.Outfit)
 	if len(outfit) > 0 {
-		lines = append(lines, "容姿: "+outfit)
+		lines = append(lines, "服装: "+outfit)
 	}
 
 	personality := strings.TrimSpace(c.Personality)
