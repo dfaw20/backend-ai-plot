@@ -1,6 +1,8 @@
 package repositories
 
 import (
+	"log"
+
 	"github.com/dfaw20/backend-ai-plot/entities"
 	"github.com/dfaw20/backend-ai-plot/models"
 	"gorm.io/gorm"
@@ -32,6 +34,7 @@ func (r *StoryRepository) GetStoryByID(id uint) (*models.Story, error) {
 
 func (r *StoryRepository) CreateStory(story *models.Story) error {
 	if err := r.db.Create(story).Error; err != nil {
+		log.Print(story)
 		return err
 	}
 	return nil

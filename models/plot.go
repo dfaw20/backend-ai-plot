@@ -25,7 +25,7 @@ type Plot struct {
 	OutputFormat string // 出力形式の指定 例:小説,会話など
 	ShowWarning  bool   // 警告文の出力のフラグ
 	Sensitive    bool
-	Supports     []Support `gorm:"many2many:supports;" json:"-"` // イベントの登場人物
+	Supports     []Support // イベントの登場人物
 }
 
 func (plot *Plot) getWarning() string {

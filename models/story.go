@@ -26,5 +26,5 @@ type Story struct {
 	Prompt          string
 	Text            string
 	Sensitive       bool
-	StoryCharacters []StoryCharacter `gorm:"many2many:story_characters;" json:"-"`
+	StoryCharacters []StoryCharacter
 }

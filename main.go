@@ -9,6 +9,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/google"
+	"gorm.io/gorm/logger"
 )
 
 var (
@@ -19,6 +20,8 @@ func main() {
 	config := configuration.LoadConfig()
 
 	db := database.ConnectDB(config.Postgres)
+	db.Logger = db.Logger.LogMode(logger.Info)
+
 	migrations.AutoMigrate(db, config)
 
 	// OAuth2設定を構築
