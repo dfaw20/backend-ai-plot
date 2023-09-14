@@ -16,5 +16,5 @@ type User struct {
 	gorm.Model
 	Email           string `gorm:"unique;not null"`
 	DisplayName     string
-	SensitiveOption uint `gorm:"not null"`
+	SensitiveOption uint
 }
