@@ -21,9 +21,9 @@ type StoryCharacter struct {
 
 type Story struct {
 	gorm.Model
-	UserID     uint
-	PlotID     uint
-	Prompt     string
-	Text       string
-	Characters []Character `gorm:"many2many:story_characters;" json:"-"`
+	UserID          uint
+	PlotID          uint
+	Prompt          string
+	Text            string
+	StoryCharacters []StoryCharacter `gorm:"many2many:story_characters;" json:"-"`
 }
