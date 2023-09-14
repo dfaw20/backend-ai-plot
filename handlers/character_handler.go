@@ -55,7 +55,6 @@ func (h *CharacterHandler) CreateCharacter(c *gin.Context) {
 		Nickname:    input.Nickname,
 		Gender:      string(gender),
 		Outfit:      input.Outfit,
-		Hairstyle:   input.Hairstyle,
 		Personality: input.Personality,
 		Tone:        input.Tone,
 		Profile:     input.Profile,

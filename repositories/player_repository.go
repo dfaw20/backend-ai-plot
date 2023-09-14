@@ -14,5 +14,5 @@ func NewPlayerRepository(userRepository UserRepository) PlayerRepository {
 
 func (r *PlayerRepository) FindByPlayerID(playerID uint) (entities.Player, error) {
 	user, err := r.userRepository.FindByUserID(playerID)
-	return user.ToPlayer(), err
+	return entities.ToPlayer(user), err
 }

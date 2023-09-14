@@ -2,6 +2,7 @@ package models
 
 import (
 	"errors"
+	"strings"
 
 	"gorm.io/gorm"
 )
@@ -41,4 +42,57 @@ type Character struct {
 	Personality string
 	Tone        string
 	Profile     string
+}
+
+func (c *Character) getGenderText() string {
+	gender, _ := ChoiceGender(c.Gender)
+
+	switch gender {
+	case "male":
+		return "男"
+	case "female":
+		return "女"
+	case "other":
+	default:
+		return ""
+	}
+
+	return ""
+}
+
+func (c *Character) BuildPrompt() string {
+	var lines []string
+
+	lines = append(lines, c.Name)
+
+	nickname := strings.TrimSpace(c.Nickname)
+	if len(nickname) > 0 {
+		lines = append(lines, "名前: "+nickname)
+	}
+
+	gender := c.getGenderText()
+	if len(gender) > 0 {
+		lines = append(lines, gender)
+	}
+
+	outfit := strings.TrimSpace(c.Outfit)
+	if len(outfit) > 0 {
+		lines = append(lines, "容姿: "+outfit)
+	}
+
+	personality := strings.TrimSpace(c.Personality)
+	if len(personality) > 0 {
+		lines = append(lines, "性格: "+personality)
+	}
+
+	tone := strings.TrimSpace(c.Tone)
+	if len(tone) > 0 {
+		lines = append(lines, "口調: "+tone)
+	}
+	profile := strings.TrimSpace(c.Profile)
+	if len(profile) > 0 {
+		lines = append(lines, profile)
+	}
+
+	return strings.Join(lines, "\n")
 }
