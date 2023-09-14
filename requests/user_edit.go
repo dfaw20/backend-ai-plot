@@ -3,9 +3,13 @@ package requests
 import "strings"
 
 type UserDisplayNameEdit struct {
-	DisplayName string `json:"display_name"`
+	DisplayName string
 }
 
 func (obj *UserDisplayNameEdit) GetTrimDisplayName() string {
 	return strings.TrimSpace(obj.DisplayName)
+}
+
+type UserSensitiveOptionEdit struct {
+	SensitiveOption uint
 }

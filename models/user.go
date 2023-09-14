@@ -4,17 +4,17 @@ import (
 	"gorm.io/gorm"
 )
 
-type SensitiveOption string
+type SensitiveOption uint
 
 const (
-	HIDE              = Gender("HIDE")
-	VIEW_WITH_CURTAIN = SensitiveOption("VIEW_WITH_CURTAIN")
-	VIEW_DIRECT       = Gender("VIEW_DIRECT")
+	VIEW_WITH_CURTAIN = SensitiveOption(1)
+	VIEW_DIRECT       = SensitiveOption(2)
+	HIDE              = SensitiveOption(3)
 )
 
 type User struct {
 	gorm.Model
 	Email           string `gorm:"unique;not null"`
 	DisplayName     string
-	SensitiveOption string `gorm:"not null"`
+	SensitiveOption uint `gorm:"not null"`
 }
