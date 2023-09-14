@@ -71,7 +71,9 @@ func main() {
 	r.GET("/plots/recent", di.PlotHandler.GetPlotsRecently)
 
 	authorized.POST("/tale/create", di.TaleHandler.CreateTale)
-	authorized.POST("/story/create", di.StoryHandler.GenerateChat)
+
+	r.GET("stories/:story_id", di.StoryHandler.GetStory)
+	authorized.POST("/stories/generate_chat", di.StoryHandler.GenerateChat)
 
 	r.Run(":8080")
 }
