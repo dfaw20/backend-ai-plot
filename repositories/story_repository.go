@@ -39,3 +39,19 @@ func (r *StoryRepository) CreateStory(story *models.Story) error {
 	}
 	return nil
 }
+
+func (r *StoryRepository) UpdateText(storyID uint, text string) (models.Story, error) {
+	story, err := r.GetStoryByID(storyID)
+
+	if err != nil {
+		return models.Story{}, err
+	}
+
+	story.Text = text
+
+	if err := r.db.Save(&story).Error; err != nil {
+		return models.Story{}, err
+	}
+
+	return *story, nil
+}

@@ -24,9 +24,10 @@ type GoogleConfig struct {
 }
 
 type Config struct {
-	Frontend FrontendConfig `json:"frontend"`
-	Postgres PostgresConfig `json:"postgres"`
-	Google   GoogleConfig   `json:"google"`
+	Frontend   FrontendConfig `json:"frontend"`
+	Postgres   PostgresConfig `json:"postgres"`
+	Google     GoogleConfig   `json:"google"`
+	Production bool           `json:"production"`
 }
 
 func LoadConfig() Config {

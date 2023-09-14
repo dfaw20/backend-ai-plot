@@ -50,7 +50,7 @@ func main() {
 	authorized := r.Group("/")
 	authorized.Use(middlewares.AuthMiddleware(db, oauth2Config))
 
-	di := initializeDIContainer(db, oauth2Config)
+	di := initializeDIContainer(db, oauth2Config, config)
 
 	r.GET("/auth/google", di.AuthHandler.GetOAuthURL)
 	r.GET("/auth/google/callback", di.AuthHandler.GetAuthGoogleCallback)
@@ -71,6 +71,7 @@ func main() {
 	r.GET("/plots/recent", di.PlotHandler.GetPlotsRecently)
 
 	authorized.POST("/tale/create", di.TaleHandler.CreateTale)
+	authorized.POST("/story/create", di.StoryHandler.GenerateChat)
 
 	r.Run(":8080")
 }

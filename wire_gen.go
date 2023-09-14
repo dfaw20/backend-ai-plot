@@ -7,16 +7,18 @@
 package main
 
 import (
+	"github.com/dfaw20/backend-ai-plot/configuration"
 	"github.com/dfaw20/backend-ai-plot/dependency"
 	"github.com/dfaw20/backend-ai-plot/handlers"
 	"github.com/dfaw20/backend-ai-plot/repositories"
+	"github.com/dfaw20/backend-ai-plot/services"
 	"golang.org/x/oauth2"
 	"gorm.io/gorm"
 )
 
 // Injectors from wire.go:
 
-func initializeDIContainer(db *gorm.DB, oauth2Config2 oauth2.Config) dependency.DIContainer {
+func initializeDIContainer(db *gorm.DB, oauth2Config2 oauth2.Config, config configuration.Config) dependency.DIContainer {
 	userRepository := repositories.NewUserRepository(db)
 	userTokenRepository := repositories.NewUserTokenRepository(db)
 	authHandler := handlers.NewAuthHandler(oauth2Config2, userRepository, userTokenRepository)
@@ -29,6 +31,8 @@ func initializeDIContainer(db *gorm.DB, oauth2Config2 oauth2.Config) dependency.
 	plotHandler := handlers.NewPlotHandler(plotRepository)
 	storyRepository := repositories.NewStoryRepository(db)
 	taleHandler := handlers.NewTaleHandler(plotRepository, characterRepository, storyRepository)
-	diContainer := dependency.NewDIContainer(authHandler, userHandler, playerHandler, characterHandler, plotHandler, taleHandler)
+	chatGenerator := services.NewChatGenerator(config)
+	storyHandler := handlers.NewStoryHandler(storyRepository, chatGenerator)
+	diContainer := dependency.NewDIContainer(authHandler, userHandler, playerHandler, characterHandler, plotHandler, taleHandler, storyHandler)
 	return diContainer
 }

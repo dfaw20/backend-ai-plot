@@ -5,17 +5,20 @@ import (
 
 	"github.com/dfaw20/backend-ai-plot/repositories"
 	"github.com/dfaw20/backend-ai-plot/requests"
+	"github.com/dfaw20/backend-ai-plot/services"
 	"github.com/gin-gonic/gin"
 )
 
 type StoryHandler struct {
-	storyRepo repositories.StoryRepository
+	storyRepo     repositories.StoryRepository
+	chatGenerator services.ChatGenerator
 }
 
 func NewStoryHandler(
 	storyRepo repositories.StoryRepository,
+	chatGenerator services.ChatGenerator,
 ) StoryHandler {
-	return StoryHandler{storyRepo}
+	return StoryHandler{storyRepo, chatGenerator}
 }
 
 func (h *StoryHandler) GenerateChat(c *gin.Context) {
@@ -31,7 +34,17 @@ func (h *StoryHandler) GenerateChat(c *gin.Context) {
 		return
 	}
 
-	story.Prompt
+	novelText, err := h.chatGenerator.Generate(story.Prompt)
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "ストーリーの生成に失敗しました"})
+		return
+	}
 
-	c.JSON(http.StatusCreated, story)
+	savedStory, err := h.storyRepo.UpdateText(story.ID, novelText)
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "ストーリーの保存に失敗しました"})
+		return
+	}
+
+	c.JSON(http.StatusCreated, savedStory)
 }
