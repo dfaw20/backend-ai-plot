@@ -25,6 +25,7 @@ func initializeDIContainer(db *gorm.DB, oauth2Config oauth2.Config) dependency.D
 		repositories.NewUserTokenRepository,
 		repositories.NewCharacterRepository,
 		repositories.NewPlotRepository,
+		repositories.NewStoryRepository,
 	)
 	return dependency.DIContainer{}
 }

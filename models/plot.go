@@ -34,12 +34,12 @@ func (plot *Plot) getWarning() string {
 	return ""
 }
 
-func (plot *Plot) getOutputFormat() string {
+func (plot *Plot) GetOutputFormat() string {
 	if len(strings.TrimSpace(plot.OutputFormat)) == 0 {
-		return ""
+		return "小説"
 	}
 
-	return "※出力形式: " + strings.TrimSpace(plot.OutputFormat)
+	return strings.TrimSpace(plot.OutputFormat)
 }
 
 func (plot *Plot) getTitle() string {
@@ -52,7 +52,7 @@ func (plot *Plot) getTitle() string {
 
 func (plot *Plot) GetGenre() string {
 	if len(strings.TrimSpace(plot.Genre)) == 0 {
-		return "ラブコメ"
+		return ""
 	}
 
 	return strings.TrimSpace(plot.Genre)
@@ -83,17 +83,7 @@ func (plot *Plot) BuildPrefixPrompt() string {
 		lines = append(lines, warning)
 	}
 
-	outputFormat := plot.getOutputFormat()
-	if len(outputFormat) > 0 {
-		lines = append(lines, outputFormat)
-	}
-
 	lines = append(lines, "")
-
-	title := plot.getTitle()
-	if len(title) > 0 {
-		lines = append(lines, title)
-	}
 
 	location := plot.getLocation()
 	if len(location) > 0 {
