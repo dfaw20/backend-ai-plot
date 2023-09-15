@@ -11,5 +11,5 @@ func (obj *UserDisplayNameEdit) GetTrimDisplayName() string {
 }
 
 type UserSensitiveOptionEdit struct {
-	SensitiveOption uint
+	SensitiveDirect bool
 }

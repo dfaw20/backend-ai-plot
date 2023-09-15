@@ -37,7 +37,7 @@ func (r *UserRepository) CreateUserIfNotExist(userInfo v2.Userinfo) (models.User
 		newUser := models.User{
 			Email:           userInfo.Email,
 			DisplayName:     userInfo.Name,
-			SensitiveOption: uint(models.VIEW_WITH_CURTAIN),
+			SensitiveDirect: false,
 		}
 
 		r.db.Create(&newUser)
@@ -86,6 +86,22 @@ func (r *UserRepository) UpdateUserDisplayName(userID uint, displayName string) 
 	}
 
 	user.DisplayName = displayName
+
+	if err := r.db.Save(&user).Error; err != nil {
+		return models.User{}, err
+	}
+
+	return user, nil
+}
+
+func (r *UserRepository) UpdateUserSensitiveOption(userID uint, sensitiveDirect bool) (models.User, error) {
+	user, err := r.FindByUserID(userID)
+
+	if err != nil {
+		return models.User{}, err
+	}
+
+	user.SensitiveDirect = sensitiveDirect
 
 	if err := r.db.Save(&user).Error; err != nil {
 		return models.User{}, err

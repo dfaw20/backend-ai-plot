@@ -63,4 +63,20 @@ func (h *UserHandler) UpdateUserDisplayName(c *gin.Context) {
 	c.JSON(http.StatusCreated, user)
 }
 
-func (h *UserHandler) UpdateUserSensitiveOption(c *gin.Context) {}
+func (h *UserHandler) UpdateUserSensitiveOption(c *gin.Context) {
+	var input requests.UserSensitiveOptionEdit
+	if err := c.ShouldBindJSON(&input); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	authUser := c.Value("auth_user").(models.User)
+
+	user, err := h.userRepository.
+		UpdateUserSensitiveOption(authUser.ID, input.SensitiveDirect)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusCreated, user)
+}
