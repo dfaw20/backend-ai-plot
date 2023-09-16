@@ -54,6 +54,7 @@ func main() {
 
 	r.GET("/auth/google", di.AuthHandler.GetOAuthURL)
 	r.GET("/auth/google/callback", di.AuthHandler.GetAuthGoogleCallback)
+	r.POST("/withdrawal/re_register", di.WithdrawalHandler.EnableReRegister)
 
 	authorized.GET("/user", di.UserHandler.GetUserInfo)
 	authorized.POST("/user/update/display_name", di.UserHandler.UpdateUserDisplayName)

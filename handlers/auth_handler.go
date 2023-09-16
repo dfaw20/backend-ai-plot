@@ -73,13 +73,13 @@ func (h *AuthHandler) GetAuthGoogleCallback(c *gin.Context) {
 		return
 	}
 
-	withdrawMailCount, err := h.withdrawalRepository.CountByEmail(userInfo.Email)
+	withdrawMails, err := h.withdrawalRepository.FindByEmail(userInfo.Email)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	if withdrawMailCount > 0 {
+	if len(withdrawMails) > 0 {
 		result := &responses.TokenResult{
 			IsWithdrawal:    true,
 			WithdrawalEmail: userInfo.Email,
@@ -87,6 +87,7 @@ func (h *AuthHandler) GetAuthGoogleCallback(c *gin.Context) {
 			User:            models.User{},
 		}
 		c.JSON(http.StatusOK, result)
+		return
 	}
 
 	// ユーザ情報の作成

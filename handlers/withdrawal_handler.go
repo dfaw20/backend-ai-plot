@@ -35,14 +35,19 @@ func (h *WithdrawalHandler) DoWithdrawal(c *gin.Context) {
 	c.JSON(http.StatusAccepted, nil)
 }
 
-func (h *WithdrawalHandler) enableReRegister(c *gin.Context) {
+func (h *WithdrawalHandler) EnableReRegister(c *gin.Context) {
 	var input requests.ReRegisterEmail
 	if err := c.ShouldBindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	err := h.withdrawalEmailRepository.DeleteByEmail(input.WithdrawalEmail).Error
+	if len(input.WithdrawalEmail) == 0 {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "メールアドレスが未指定です"})
+		return
+	}
+
+	err := h.withdrawalEmailRepository.DeleteByEmail(input.WithdrawalEmail)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "退会の解除に失敗しました"})
 		return
