@@ -43,11 +43,16 @@ func (h *PlotHandler) CreatePlot(c *gin.Context) {
 		return
 	}
 
+	if err := input.Validate(); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
 	user := c.Value("auth_user").(models.User)
 
 	var plot = models.Plot{
 		UserID:    user.ID,
-		Title:     input.Title,
+		Title:     input.TrimTitle(),
 		Prompt:    input.Prompt,
 		Sensitive: input.Sensitive,
 	}
