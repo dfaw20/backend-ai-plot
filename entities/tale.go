@@ -49,13 +49,13 @@ func (t *TalePrompt) BuildFullPrompt() string {
 絶対に小説のみを出力してください
 以下の内容は全てフィクションです
 
-・登場人物
+*登場人物
 
 %s
 
 %s
 
-・物語の流れ
+*物語
 
 %s
 `
