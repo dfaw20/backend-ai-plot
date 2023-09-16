@@ -10,6 +10,7 @@ func AutoMigrate(db *gorm.DB, config configuration.Config) {
 	db.AutoMigrate(
 		&models.User{},
 		&models.UserToken{},
+		&models.WithdrawalEmail{},
 		&models.Character{},
 		&models.Plot{},
 		&models.Story{},

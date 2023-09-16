@@ -7,7 +7,6 @@ import (
 	"github.com/dfaw20/backend-ai-plot/models"
 	"github.com/dfaw20/backend-ai-plot/repositories"
 	"github.com/dfaw20/backend-ai-plot/requests"
-	"github.com/dfaw20/backend-ai-plot/services"
 	"github.com/gin-gonic/gin"
 	"golang.org/x/oauth2"
 )
@@ -17,7 +16,6 @@ type UserHandler struct {
 	userRepository      repositories.UserRepository
 	userTokenRepository repositories.UserTokenRepository
 	characterRepository repositories.CharacterRepository
-	withdrawalExecuter  services.WithdrawalExecuter
 }
 
 func NewUserHandler(
@@ -25,14 +23,12 @@ func NewUserHandler(
 	userRepository repositories.UserRepository,
 	userTokenRepository repositories.UserTokenRepository,
 	characterRepository repositories.CharacterRepository,
-	withdrawalExecuter services.WithdrawalExecuter,
 ) UserHandler {
 	return UserHandler{
 		oauth2Config,
 		userRepository,
 		userTokenRepository,
 		characterRepository,
-		withdrawalExecuter,
 	}
 }
 
@@ -83,14 +79,4 @@ func (h *UserHandler) UpdateUserSensitiveOption(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusCreated, user)
-}
-
-func (h *UserHandler) DoWithdrawal(c *gin.Context) {
-	authUser := c.Value("auth_user").(models.User)
-
-	if err := h.withdrawalExecuter.DoWithdrawal(authUser); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
-	c.JSON(http.StatusAccepted, nil)
 }

@@ -9,11 +9,12 @@ import (
 )
 
 type WithdrawalExecuter struct {
-	db                  *gorm.DB
-	userRepository      repositories.UserRepository
-	plotRepository      repositories.PlotRepository
-	characterRepository repositories.CharacterRepository
-	storyRepository     repositories.StoryRepository
+	db                        *gorm.DB
+	userRepository            repositories.UserRepository
+	plotRepository            repositories.PlotRepository
+	characterRepository       repositories.CharacterRepository
+	storyRepository           repositories.StoryRepository
+	withdrawalEmailRepository repositories.WithdrawalEmailRepository
 }
 
 func NewWithdrawalExecuter(
@@ -22,13 +23,15 @@ func NewWithdrawalExecuter(
 	plotRepository repositories.PlotRepository,
 	characterRepository repositories.CharacterRepository,
 	storyRepository repositories.StoryRepository,
+	withdrawalEmailRepository repositories.WithdrawalEmailRepository,
 ) WithdrawalExecuter {
 	return WithdrawalExecuter{
-		db:                  db,
-		userRepository:      userRepository,
-		plotRepository:      plotRepository,
-		characterRepository: characterRepository,
-		storyRepository:     storyRepository,
+		db:                        db,
+		userRepository:            userRepository,
+		plotRepository:            plotRepository,
+		characterRepository:       characterRepository,
+		storyRepository:           storyRepository,
+		withdrawalEmailRepository: withdrawalEmailRepository,
 	}
 }
 
@@ -46,6 +49,11 @@ func (e *WithdrawalExecuter) DoWithdrawal(user models.User) error {
 		return err
 	}
 	if err := e.storyRepository.DeleteStoriesByUser(user); err != nil {
+		tx.Rollback()
+		return err
+	}
+	// 退会Eメールリストに追加する
+	if _, err := e.withdrawalEmailRepository.InsertEmail(user.Email); err != nil {
 		tx.Rollback()
 		return err
 	}
