@@ -5,6 +5,7 @@ import (
 
 	"github.com/dfaw20/backend-ai-plot/models"
 	"github.com/dfaw20/backend-ai-plot/repositories"
+	"github.com/dfaw20/backend-ai-plot/requests"
 	"github.com/dfaw20/backend-ai-plot/services"
 	"github.com/gin-gonic/gin"
 )
@@ -35,7 +36,17 @@ func (h *WithdrawalHandler) DoWithdrawal(c *gin.Context) {
 }
 
 func (h *WithdrawalHandler) enableReRegister(c *gin.Context) {
-	h.withdrawalEmailRepository.DeleteByEmail()
+	var input requests.ReRegisterEmail
+	if err := c.ShouldBindJSON(&input); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	err := h.withdrawalEmailRepository.DeleteByEmail(input.WithdrawalEmail).Error
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "退会の解除に失敗しました"})
+		return
+	}
 
 	c.JSON(http.StatusAccepted, nil)
 }

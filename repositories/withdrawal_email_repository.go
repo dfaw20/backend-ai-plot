@@ -26,3 +26,14 @@ func (r *WithdrawalEmailRepository) InsertEmail(email string) (models.Withdrawal
 
 	return withdrawalEmail, err
 }
+
+func (r *WithdrawalEmailRepository) CountByEmail(email string) (uint, error) {
+	var mailCount int64
+
+	err := r.db.
+		Table("withdrawal_emails").
+		Where("email = ?", email).
+		Count(&mailCount).Error
+
+	return uint(mailCount), err
+}

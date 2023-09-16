@@ -58,7 +58,7 @@ func main() {
 	authorized.GET("/user", di.UserHandler.GetUserInfo)
 	authorized.POST("/user/update/display_name", di.UserHandler.UpdateUserDisplayName)
 	authorized.POST("/user/update/sensitive_option", di.UserHandler.UpdateUserSensitiveOption)
-	authorized.POST("/user/withdrawal", di.UserHandler.DoWithdrawal)
+	authorized.POST("/user/withdrawal", di.WithdrawalHandler.DoWithdrawal)
 
 	r.GET("/players/:player_id", di.PlayerHandler.GetPlayer)
 	r.GET("/players/:player_id/characters", di.PlayerHandler.GetPlayerCharacters)

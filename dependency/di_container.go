@@ -3,13 +3,14 @@ package dependency
 import "github.com/dfaw20/backend-ai-plot/handlers"
 
 type DIContainer struct {
-	AuthHandler      handlers.AuthHandler
-	UserHandler      handlers.UserHandler
-	PlayerHandler    handlers.PlayerHandler
-	CharacterHandler handlers.CharacterHandler
-	PlotHandler      handlers.PlotHandler
-	TaleHandler      handlers.TaleHandler
-	StoryHandler     handlers.StoryHandler
+	AuthHandler       handlers.AuthHandler
+	UserHandler       handlers.UserHandler
+	PlayerHandler     handlers.PlayerHandler
+	CharacterHandler  handlers.CharacterHandler
+	PlotHandler       handlers.PlotHandler
+	TaleHandler       handlers.TaleHandler
+	StoryHandler      handlers.StoryHandler
+	WithdrawalHandler handlers.WithdrawalHandler
 }
 
 func NewDIContainer(
@@ -20,6 +21,7 @@ func NewDIContainer(
 	plotHandler handlers.PlotHandler,
 	TaleHandler handlers.TaleHandler,
 	StoryHandler handlers.StoryHandler,
+	WithdrawalHandler handlers.WithdrawalHandler,
 ) DIContainer {
 	return DIContainer{
 		authHandler,
@@ -29,5 +31,6 @@ func NewDIContainer(
 		plotHandler,
 		TaleHandler,
 		StoryHandler,
+		WithdrawalHandler,
 	}
 }

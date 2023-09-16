@@ -4,7 +4,9 @@ import (
 	"context"
 	"net/http"
 
+	"github.com/dfaw20/backend-ai-plot/models"
 	"github.com/dfaw20/backend-ai-plot/repositories"
+	"github.com/dfaw20/backend-ai-plot/responses"
 	"github.com/gin-gonic/gin"
 	"golang.org/x/oauth2"
 	v2 "google.golang.org/api/oauth2/v2"
@@ -12,17 +14,24 @@ import (
 )
 
 type AuthHandler struct {
-	oauth2Config        oauth2.Config
-	userRepository      repositories.UserRepository
-	userTokenRepository repositories.UserTokenRepository
+	oauth2Config         oauth2.Config
+	userRepository       repositories.UserRepository
+	userTokenRepository  repositories.UserTokenRepository
+	withdrawalRepository repositories.WithdrawalEmailRepository
 }
 
 func NewAuthHandler(
 	oauth2Config oauth2.Config,
 	userRepository repositories.UserRepository,
 	userTokenRepository repositories.UserTokenRepository,
+	withdrawalRepository repositories.WithdrawalEmailRepository,
 ) AuthHandler {
-	return AuthHandler{oauth2Config, userRepository, userTokenRepository}
+	return AuthHandler{
+		oauth2Config,
+		userRepository,
+		userTokenRepository,
+		withdrawalRepository,
+	}
 }
 
 func (h *AuthHandler) GetOAuthURL(c *gin.Context) {
@@ -64,6 +73,22 @@ func (h *AuthHandler) GetAuthGoogleCallback(c *gin.Context) {
 		return
 	}
 
+	withdrawMailCount, err := h.withdrawalRepository.CountByEmail(userInfo.Email)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	if withdrawMailCount > 0 {
+		result := &responses.TokenResult{
+			IsWithdrawal:    true,
+			WithdrawalEmail: userInfo.Email,
+			Token:           oauth2.Token{},
+			User:            models.User{},
+		}
+		c.JSON(http.StatusOK, result)
+	}
+
 	// ユーザ情報の作成
 	user, err := h.userRepository.CreateUserIfNotExist(*userInfo)
 	if err != nil {
@@ -72,5 +97,10 @@ func (h *AuthHandler) GetAuthGoogleCallback(c *gin.Context) {
 	}
 
 	// ユーザー情報の表示
-	c.JSON(http.StatusOK, gin.H{"token": token, "user": user})
+	c.JSON(http.StatusOK, &responses.TokenResult{
+		IsWithdrawal:    false,
+		WithdrawalEmail: "",
+		Token:           *token,
+		User:            user,
+	})
 }
