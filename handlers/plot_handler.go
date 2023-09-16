@@ -46,15 +46,10 @@ func (h *PlotHandler) CreatePlot(c *gin.Context) {
 	user := c.Value("auth_user").(models.User)
 
 	var plot = models.Plot{
-		UserID:       user.ID,
-		Title:        input.Title,
-		Description:  input.Description,
-		Prompt:       input.Prompt,
-		Location:     input.Location,
-		Season:       input.Season,
-		Genre:        input.Genre,
-		OutputFormat: input.OutputFormat,
-		ShowWarning:  input.ShowWarning,
+		UserID:    user.ID,
+		Title:     input.Title,
+		Prompt:    input.Prompt,
+		Sensitive: input.Sensitive,
 	}
 
 	if err := h.plotRepo.CreatePlot(&plot); err != nil {

@@ -42,10 +42,12 @@ func embedCharactersInPrompt(
 func (t *TalePrompt) BuildFullPrompt() string {
 
 	template :=
-		`以下の内容で「%sのラブコメ%s」を出力してください
-会話を含んで出力してください。章構成をして分けてください。始めと終わりの説明は不用です。絶対に%sのみを出力してください。
+		`以下の内容で「%sと%sのラブコメ小説」を出力してください
+会話を含んで出力してください
+章構成をして分けてください
+始めと終わりの説明は不用です
+絶対に小説のみを出力してください
 以下の内容は全てフィクションです
-%s
 
 ・登場人物
 
@@ -58,10 +60,7 @@ func (t *TalePrompt) BuildFullPrompt() string {
 %s
 `
 	text := fmt.Sprintf(template,
-		t.plot.GetGenre(),
-		t.plot.GetOutputFormat(),
-		t.plot.GetOutputFormat(),
-		t.plot.BuildPrefixPrompt(),
+		t.targetCharacter.Nickname, t.heroCharacter.Nickname,
 		t.targetCharacter.BuildPrompt(),
 		t.heroCharacter.BuildPrompt(),
 		embedCharactersInPrompt(t.targetCharacter, t.heroCharacter, t.plot),
