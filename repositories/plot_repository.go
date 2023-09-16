@@ -23,6 +23,13 @@ func (r *PlotRepository) GetPlotsByPlayer(player entities.Player) ([]models.Plot
 	return plots, nil
 }
 
+func (r *PlotRepository) DeletePlotsByUser(user models.User) error {
+	if err := r.db.Delete(&models.Plot{}, "user_id = ?", user.ID).Error; err != nil {
+		return err
+	}
+	return nil
+}
+
 func (r *PlotRepository) GetPlotByID(id uint) (*models.Plot, error) {
 	var plot models.Plot
 	if err := r.db.First(&plot, id).Error; err != nil {

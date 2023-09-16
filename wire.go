@@ -34,6 +34,7 @@ func initializeDIContainer(
 		repositories.NewPlotRepository,
 		repositories.NewStoryRepository,
 		services.NewChatGenerator,
+		services.NewWithdrawalExecuter,
 	)
 	return dependency.DIContainer{}
 }

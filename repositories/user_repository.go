@@ -78,6 +78,23 @@ func (r *UserRepository) FindByUserID(userID uint) (models.User, error) {
 	return user, nil
 }
 
+func (r *UserRepository) DeleteByUserID(userID uint) error {
+	var user models.User
+	result := r.db.Where("id = ?", userID).First(&user)
+
+	if result.Error != nil {
+		return result.Error
+	}
+
+	if user.ID == 0 {
+		return errors.New("ユーザが見つかりません")
+	}
+
+	r.db.Delete(user)
+
+	return nil
+}
+
 func (r *UserRepository) UpdateUserDisplayName(userID uint, displayName string) (models.User, error) {
 	user, err := r.FindByUserID(userID)
 

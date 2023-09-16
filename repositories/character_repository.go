@@ -22,6 +22,13 @@ func (r *CharacterRepository) GetCharactersByPlayer(player entities.Player) ([]m
 	return characters, nil
 }
 
+func (r *CharacterRepository) DeleteCharactersByUser(user models.User) error {
+	if err := r.db.Delete(&models.Character{}, "user_id = ?", user.ID).Error; err != nil {
+		return err
+	}
+	return nil
+}
+
 func (r *CharacterRepository) GetCharacterByID(id uint) (*models.Character, error) {
 	var character models.Character
 	if err := r.db.First(&character, id).Error; err != nil {

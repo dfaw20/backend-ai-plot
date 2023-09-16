@@ -32,6 +32,13 @@ func (r *StoryRepository) GetStoryByID(id uint) (*models.Story, error) {
 	return &story, nil
 }
 
+func (r *StoryRepository) DeleteStoriesByUser(user models.User) error {
+	if err := r.db.Delete(&models.Story{}, "user_id = ?", user.ID).Error; err != nil {
+		return err
+	}
+	return nil
+}
+
 func (r *StoryRepository) CreateStory(story *models.Story) error {
 	if err := r.db.Create(story).Error; err != nil {
 		log.Print(story)
