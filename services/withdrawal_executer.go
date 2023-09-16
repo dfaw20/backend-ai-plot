@@ -1,6 +1,8 @@
 package services
 
 import (
+	"time"
+
 	"github.com/dfaw20/backend-ai-plot/models"
 	"github.com/dfaw20/backend-ai-plot/repositories"
 	"gorm.io/gorm"
@@ -47,7 +49,12 @@ func (e *WithdrawalExecuter) DoWithdrawal(user models.User) error {
 		tx.Rollback()
 		return err
 	}
-	if err := e.userRepository.DeleteByUserID(user.ID); err != nil {
+	// 削除前にメールアドレスに日時文字列をつける(再登録時に重複エラー回避の為)
+	if _, err := e.userRepository.UpdateUserEmail(user.ID, user.Email+time.Now().String()); err != nil {
+		tx.Rollback()
+		return err
+	}
+	if err := e.userRepository.DeleteByUser(user); err != nil {
 		tx.Rollback()
 		return err
 	}

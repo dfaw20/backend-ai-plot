@@ -26,13 +26,13 @@ func (r *UserRepository) CreateUserIfNotExist(userInfo v2.Userinfo) (models.User
 
 	// データベースからユーザ情報を検索
 	var user models.User
-	result := r.db.Where("email = ?", userInfo.Email).First(&user)
+	err := r.db.Where("email = ?", userInfo.Email).First(&user).Error
 
-	if result.Error != nil {
-		return models.User{}, result.Error
+	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+		return models.User{}, err
 	}
 
-	if user.ID == 0 {
+	if errors.Is(err, gorm.ErrRecordNotFound) {
 		// ユーザが存在しない場合、新しいユーザを作成
 		newUser := models.User{
 			Email:           userInfo.Email,
@@ -78,21 +78,24 @@ func (r *UserRepository) FindByUserID(userID uint) (models.User, error) {
 	return user, nil
 }
 
-func (r *UserRepository) DeleteByUserID(userID uint) error {
-	var user models.User
-	result := r.db.Where("id = ?", userID).First(&user)
+func (r *UserRepository) DeleteByUser(user models.User) error {
+	return r.db.Delete(&models.User{}, "id = ?", user.ID).Error
+}
 
-	if result.Error != nil {
-		return result.Error
+func (r *UserRepository) UpdateUserEmail(userID uint, email string) (models.User, error) {
+	user, err := r.FindByUserID(userID)
+
+	if err != nil {
+		return models.User{}, err
 	}
 
-	if user.ID == 0 {
-		return errors.New("ユーザが見つかりません")
+	user.Email = email
+
+	if err := r.db.Save(&user).Error; err != nil {
+		return models.User{}, err
 	}
 
-	r.db.Delete(user)
-
-	return nil
+	return user, nil
 }
 
 func (r *UserRepository) UpdateUserDisplayName(userID uint, displayName string) (models.User, error) {
