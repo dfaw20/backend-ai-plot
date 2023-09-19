@@ -64,6 +64,49 @@ func (h *PlotHandler) CreatePlot(c *gin.Context) {
 	c.JSON(http.StatusCreated, plot)
 }
 
+func (h *PlotHandler) UpdatePlot(c *gin.Context) {
+	idStr := c.Param("id")
+	id, err := utils.ParseUint(idStr)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid plot ID"})
+		return
+	}
+
+	plot, err := h.plotRepo.GetPlotByID(uint(id))
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Plot not found"})
+		return
+	}
+
+	user := c.Value("auth_user").(models.User)
+
+	if user.ID != plot.UserID {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "シナリオを編集する権限がありません"})
+		return
+	}
+
+	var input requests.PlotInput
+	if err := c.ShouldBindJSON(&input); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	if err := input.Validate(); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	plot.Title = input.Title
+	plot.Prompt = input.Prompt
+	plot.Sensitive = input.Sensitive
+
+	if err := h.plotRepo.UpdatePlot(plot); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusAccepted, plot)
+}
+
 func (h *PlotHandler) GetPlotsRecently(c *gin.Context) {
 	plots, err := h.plotRepo.GetPlotsOrderByUpdatedAtDescLimit100()
 	if err != nil {

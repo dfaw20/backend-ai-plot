@@ -45,6 +45,13 @@ func (r *PlotRepository) CreatePlot(plot *models.Plot) error {
 	return nil
 }
 
+func (r *PlotRepository) UpdatePlot(plot *models.Plot) error {
+	if err := r.db.Updates(plot).Error; err != nil {
+		return err
+	}
+	return nil
+}
+
 func (r *PlotRepository) GetPlotsOrderByUpdatedAtDescLimit100() ([]models.Plot, error) {
 	var plots []models.Plot
 	if err := r.db.
