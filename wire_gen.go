@@ -19,6 +19,7 @@ import (
 // Injectors from wire.go:
 
 func initializeDIContainer(db *gorm.DB, oauth2Config2 oauth2.Config, config configuration.Config) dependency.DIContainer {
+	homeHandler := handlers.NewHomeHandler()
 	userRepository := repositories.NewUserRepository(db)
 	userTokenRepository := repositories.NewUserTokenRepository(db)
 	withdrawalEmailRepository := repositories.NewWithdrawalEmailRepository(db)
@@ -36,6 +37,6 @@ func initializeDIContainer(db *gorm.DB, oauth2Config2 oauth2.Config, config conf
 	storyHandler := handlers.NewStoryHandler(storyRepository, chatGenerator)
 	withdrawalExecuter := services.NewWithdrawalExecuter(db, userRepository, plotRepository, characterRepository, storyRepository, withdrawalEmailRepository)
 	withdrawalHandler := handlers.NewWithdrawalHandler(withdrawalExecuter, withdrawalEmailRepository)
-	diContainer := dependency.NewDIContainer(authHandler, userHandler, playerHandler, characterHandler, plotHandler, taleHandler, storyHandler, withdrawalHandler)
+	diContainer := dependency.NewDIContainer(homeHandler, authHandler, userHandler, playerHandler, characterHandler, plotHandler, taleHandler, storyHandler, withdrawalHandler)
 	return diContainer
 }

@@ -52,6 +52,8 @@ func main() {
 
 	di := initializeDIContainer(db, oauth2Config, config)
 
+	r.GET("/health_check", di.HomeHandler.HealthCheck)
+
 	r.GET("/auth/google", di.AuthHandler.GetOAuthURL)
 	r.GET("/auth/google/callback", di.AuthHandler.GetAuthGoogleCallback)
 	r.POST("/withdrawal/re_register", di.WithdrawalHandler.EnableReRegister)

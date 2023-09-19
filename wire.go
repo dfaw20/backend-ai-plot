@@ -20,6 +20,7 @@ func initializeDIContainer(
 ) dependency.DIContainer {
 	wire.Build(
 		dependency.NewDIContainer,
+		handlers.NewHomeHandler,
 		handlers.NewAuthHandler,
 		handlers.NewUserHandler,
 		handlers.NewPlayerHandler,
