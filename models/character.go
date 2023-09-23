@@ -40,6 +40,7 @@ type Character struct {
 	Tone        string
 	Profile     string
 	Sensitive   bool
+	MapID       uint
 }
 
 func (c *Character) getGenderText() string {
@@ -74,7 +75,7 @@ func (c *Character) BuildPrompt() string {
 
 	nickname := strings.TrimSpace(c.Nickname)
 	if len(nickname) > 0 {
-		lines = append(lines, "名前: "+nickname)
+		lines = append(lines, "呼び名: "+nickname)
 	}
 
 	gender := c.getGenderText()
@@ -84,12 +85,12 @@ func (c *Character) BuildPrompt() string {
 
 	hair := strings.TrimSpace(c.Outfit)
 	if len(hair) > 0 {
-		lines = append(lines, "髪色: "+hair)
+		lines = append(lines, "髪の色: "+hair)
 	}
 
 	outfit := strings.TrimSpace(c.Outfit)
 	if len(outfit) > 0 {
-		lines = append(lines, "服装: "+outfit)
+		lines = append(lines, "衣装: "+outfit)
 	}
 
 	personality := strings.TrimSpace(c.Personality)

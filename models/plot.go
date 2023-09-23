@@ -6,12 +6,6 @@ import (
 	"gorm.io/gorm"
 )
 
-type Support struct {
-	gorm.Model
-	PlotID      uint
-	CharacterID uint
-}
-
 // イベント
 type Plot struct {
 	gorm.Model
@@ -19,7 +13,6 @@ type Plot struct {
 	Title     string // イベントのタイトル
 	Prompt    string // AIに入力するプロンプト(自由入力)
 	Sensitive bool
-	Supports  []Support // イベントの登場人物
 }
 
 func (plot *Plot) getTitle() string {

@@ -9,7 +9,6 @@ type Role string
 const (
 	HERO    = Gender("i")
 	PARTNER = Gender("u")
-	SUPPORT = Gender("support")
 )
 
 type StoryCharacter struct {
